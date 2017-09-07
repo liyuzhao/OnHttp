@@ -2,6 +2,7 @@ package com.absurd.onhttp.base;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -29,11 +30,11 @@ public class FileServiceListener<T> implements IServiceListener {
     public void onSuccess(InputStream inputStream) {
         try {
             FileOutputStream fos = new FileOutputStream(file);
-            ;
             byte[] buffer = new byte[1024];
             int len;
             while ((len = inputStream.read(buffer)) != -1) {
                 fos.write(buffer, 0, len);
+                Log.v("TAG","----------load--------");
             }
             hander.post(new Runnable() {
                 @Override

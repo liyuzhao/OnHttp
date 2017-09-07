@@ -136,7 +136,7 @@ public class OnHttp {
         if (mView != null) {
             serviceListener = new BitmapServiceListener(view, httpListener);
         } else if (mFile != null) {
-            serviceListener = new FileServiceListener<>(file, httpListener);
+            serviceListener = new FileServiceListener(file, httpListener);
         } else {
             serviceListener = new ServiceListener(clazz, httpListener);
         }
