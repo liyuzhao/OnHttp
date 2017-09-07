@@ -1,13 +1,16 @@
 package com.absurd.onhttp.base;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.absurd.onhttp.util.JsonUtil;
+import com.absurd.onhttp.util.StringUtil;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+
 
 /**
  * Created by 段泽全 on 2017/9/4.
@@ -19,22 +22,27 @@ public class ServiceListener<T> implements IServiceListener {
     private Class<?> T;
     private IHttpListener<T> listener;
     private Handler hander = new Handler(Looper.getMainLooper());
+    private final static String STRING_NAME = "java.lang.String";
+    private final static String BITMAP_NAME = "android.graphics.Bitmap";
+    private final static String FILE_NAME = "java.io.File";
 
     public ServiceListener(Class<?> T, IHttpListener<T> listener) {
         this.T = T;
-        T.getName();
         this.listener = listener;
 
     }
 
     @Override
     public void onSuccess(InputStream inputStream) {
-        final String content = getContent(inputStream);
+
         T respone = null;
-        try {
-            respone = (T) JsonUtil.fromJsonString(content, T);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (T.getName().equalsIgnoreCase(STRING_NAME)) {
+            respone = getString(inputStream);
+        } else if (T.getName().equalsIgnoreCase(BITMAP_NAME)) {
+            respone = getBitmap(inputStream);
+        } else if (T.getName().equalsIgnoreCase(FILE_NAME)) {
+        } else {
+            respone = getJson(inputStream);
         }
         final T finalRespone = respone;
         hander.post(new Runnable() {
@@ -44,31 +52,29 @@ public class ServiceListener<T> implements IServiceListener {
                     listener.onSuccess(finalRespone);
             }
         });
-
     }
 
-    private String getContent(InputStream inputStream) {
-        String content = null;
+    private T getBitmap(InputStream inputStream) {
+        return (T) BitmapFactory.decodeStream(inputStream);
+    }
+
+    private T getString(InputStream inputStream) {
+        return (T) StringUtil.streamToString(inputStream);
+    }
+
+    private T getJson(InputStream inputStream) {
+        T respone = null;
         try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder builder = new StringBuilder();
-            String line = null;
-            try {
-                while ((line = reader.readLine()) != null) {
-                    builder.append(line);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return builder.toString();
+            respone = (T) JsonUtil.fromJsonString(StringUtil.streamToString(inputStream), T);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return content;
+        return respone;
     }
 
     @Override
     public void error(int code) {
-        listener.onError(code);
+        if (listener != null)
+            listener.onError(code);
     }
 }

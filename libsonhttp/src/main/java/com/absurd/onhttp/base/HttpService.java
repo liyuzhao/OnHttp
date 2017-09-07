@@ -54,6 +54,7 @@ public class HttpService implements IHttpService {
             mListener.onSuccess(in);
             mUrlConnection.disconnect();
         }
+
     }
 
     @Override

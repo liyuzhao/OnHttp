@@ -2,8 +2,10 @@ package com.absurd.onhttp.util;
 
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 
 /**
@@ -14,21 +16,23 @@ import java.io.InputStream;
 
 public class StringUtil {
 
-    public static String streamToString(InputStream is) {
+    public static String streamToString(InputStream inputStream) {
+        String content = null;
         try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int len = 0;
-            while ((len = is.read(buffer)) != -1) {
-                baos.write(buffer, 0, len);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder builder = new StringBuilder();
+            String line = null;
+            try {
+                while ((line = reader.readLine()) != null) {
+                    builder.append(line);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            baos.close();
-            is.close();
-            byte[] byteArray = baos.toByteArray();
-            return new String(byteArray);
+            return builder.toString();
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
+        return content;
     }
 }

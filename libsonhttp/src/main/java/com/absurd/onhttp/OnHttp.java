@@ -1,10 +1,18 @@
 package com.absurd.onhttp;
 
+import android.graphics.Bitmap;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+
+import com.absurd.onhttp.base.BitmapServiceListener;
+import com.absurd.onhttp.base.FileServiceListener;
 import com.absurd.onhttp.base.IHttpListener;
 import com.absurd.onhttp.base.IServiceListener;
 import com.absurd.onhttp.base.ServiceListener;
 import com.absurd.onhttp.base.ThreadPoolManager;
 
+import java.io.File;
 import java.util.Map;
 import java.util.concurrent.FutureTask;
 
@@ -17,7 +25,7 @@ import java.util.concurrent.FutureTask;
 public class OnHttp {
     public final static int GET = 0;
     public final static int POST = 1;
-    public static OnHttp instance;
+    private static OnHttp instance;
     private Map<String, String> mHeaders;
     private Map<String, String> mBody;
     private String mUrl;
@@ -25,6 +33,8 @@ public class OnHttp {
     private IHttpListener mHttpListener;
     private Class<?> t;
     private boolean mCacheHeader = false;
+    private ImageView mView;
+    private File mFile;
 
     public static OnHttp getInstance() {
         if (instance == null) {
@@ -71,9 +81,42 @@ public class OnHttp {
         return instance;
     }
 
+    public OnHttp view(ImageView view) {
+        mView = view;
+        method(GET);
+        clazz(Bitmap.class);
+        return instance;
+    }
+
+    public OnHttp file(File file) {
+        mFile = file;
+        method(GET);
+        clazz(File.class);
+        return instance;
+    }
+
     public void excute() {
-        sendRequest(mUrl, mMethod, mHeaders, mBody, t, mHttpListener);
+        if (!checkParam(mView, mUrl, t, mFile)) return;
+        sendRequest(mView, mUrl, mMethod, mHeaders, mBody, t, mFile, mHttpListener);
         clear();
+    }
+
+    private boolean checkParam(ImageView view, String url, Class<?> t, File file) {
+        if (url.equalsIgnoreCase("")) {
+            Log.e("OnHttp", "url is null");
+            return false;
+        }
+        if (t == null) {
+            Log.e("OnHttp", "class is null");
+            return false;
+        }
+        if (file != null) {
+            if (file.exists()) {
+                Log.e("OnHttp", "file is exists (" + file.getAbsolutePath() + ")");
+                return false;
+            }
+        }
+        return true;
     }
 
     private void clear() {
@@ -83,11 +126,20 @@ public class OnHttp {
         this.mUrl = "";
         this.mHttpListener = null;
         mMethod = 1;
+        mView = null;
+        mFile = null;
     }
 
 
-    private <T, M> void sendRequest(String url, int method, Map<String, String> header, Map<String, String> body, Class<T> clazz, IHttpListener<M> httpListener) {
-        IServiceListener serviceListener = new ServiceListener(clazz, httpListener);
+    private <T, M> void sendRequest(ImageView view, String url, int method, Map<String, String> header, Map<String, String> body, Class<T> clazz, File file, IHttpListener<M> httpListener) {
+        IServiceListener serviceListener;
+        if (mView != null) {
+            serviceListener = new BitmapServiceListener(view, httpListener);
+        } else if (mFile != null) {
+            serviceListener = new FileServiceListener<>(file, httpListener);
+        } else {
+            serviceListener = new ServiceListener(clazz, httpListener);
+        }
         HttpTask httpTask = new HttpTask(url, method, header, body, serviceListener);
         ThreadPoolManager.getInstance().excute(new FutureTask<Object>(httpTask, null));
     }
