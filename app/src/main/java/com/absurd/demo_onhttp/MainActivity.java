@@ -27,7 +27,18 @@ public class MainActivity extends AppCompatActivity {
 
     public void OnClick(View v) {
         OnHttp.getInstance().url(Constaint.FILE)
-                .file(new File("/sdcard/Music/qq.apk"))
+                .file(new File("/sdcard/Music/aaa.png"))
+                .listener(new IHttpListener<File>() {
+                    @Override
+                    public void onSuccess(File o) {
+
+                    }
+
+                    @Override
+                    public void onError(int code) {
+
+                    }
+                })
                 .excute();
     }
 
@@ -48,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         Map<String, String> body = new HashMap<String, String>();
-        body.put("id", 1 + "");
         body.put("name", "admin");
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Cookie", "WSJ=54654654654643213.2134658");
@@ -58,7 +68,20 @@ public class MainActivity extends AppCompatActivity {
                 .method(OnHttp.GET)
                 .body(body)
                 .headers(headers)
-                .listener(listener)
+                .listener(new IHttpListener<Respone>() {
+                    @Override
+                    public void onSuccess(Respone respone) {
+                        Log.v("TAG", "exponent:" + respone.getExponent());
+                        Log.v("TAG", "id:" + respone.getId());
+                        Log.v("TAG", "modulus:" + respone.getModulus());
+
+                    }
+
+                    @Override
+                    public void onError(int code) {
+
+                    }
+                })
                 .excute();
     }
 }
