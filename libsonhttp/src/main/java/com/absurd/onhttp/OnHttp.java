@@ -1,17 +1,18 @@
 package com.absurd.onhttp;
 
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
-
 import com.absurd.onhttp.base.BitmapServiceListener;
 import com.absurd.onhttp.base.FileServiceListener;
 import com.absurd.onhttp.base.IHttpListener;
 import com.absurd.onhttp.base.IServiceListener;
 import com.absurd.onhttp.base.ServiceListener;
 import com.absurd.onhttp.base.ThreadPoolManager;
-
+import com.absurd.onhttp.cache.BitmapCache;
+import com.absurd.onhttp.cache.LRUCache;
 import java.io.File;
 import java.util.Map;
 import java.util.concurrent.FutureTask;
@@ -35,6 +36,7 @@ public class OnHttp {
     private boolean mCacheHeader = false;
     private ImageView mView;
     private File mFile;
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     public static OnHttp getInstance() {
         if (instance == null) {
@@ -96,12 +98,12 @@ public class OnHttp {
     }
 
     public void excute() {
-        if (!checkParam(mView, mUrl, t, mFile)) return;
+        if (!checkParam(mView, mUrl.replace("/", "_").replace(":", "-"), t, mFile)) return;
         sendRequest(mView, mUrl, mMethod, mHeaders, mBody, t, mFile, mHttpListener);
         clear();
     }
 
-    private boolean checkParam(ImageView view, String url, Class<?> t, File file) {
+    private boolean checkParam(final ImageView view, String url, Class<?> t, File file) {
         if (url.equalsIgnoreCase("")) {
             Log.e("OnHttp", "url is null");
             return false;
@@ -113,6 +115,28 @@ public class OnHttp {
         if (file != null) {
             if (file.exists()) {
                 Log.e("OnHttp", "file is exists (" + file.getAbsolutePath() + ")");
+                return false;
+            }
+        }
+        if (view != null) {
+            if (LRUCache.getInstance().exists(url)) {
+                final Bitmap bitmap = LRUCache.getInstance().get(url);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.setImageBitmap(bitmap);
+                    }
+                });
+                return false;
+            } else if (BitmapCache.getInstance().exists(url)) {
+                final Bitmap bitmap = BitmapCache.getInstance().get(url);
+                LRUCache.getInstance().put(url, bitmap);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.setImageBitmap(bitmap);
+                    }
+                });
                 return false;
             }
         }
@@ -134,7 +158,7 @@ public class OnHttp {
     private <T, M> void sendRequest(ImageView view, String url, int method, Map<String, String> header, Map<String, String> body, Class<T> clazz, File file, IHttpListener<M> httpListener) {
         IServiceListener serviceListener;
         if (mView != null) {
-            serviceListener = new BitmapServiceListener(view, httpListener);
+            serviceListener = new BitmapServiceListener(view, httpListener, url);
         } else if (mFile != null) {
             serviceListener = new FileServiceListener(file, httpListener);
         } else {

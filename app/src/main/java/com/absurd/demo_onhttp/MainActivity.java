@@ -24,21 +24,9 @@ public class MainActivity extends AppCompatActivity {
         imageView = (ImageView) findViewById(R.id.iv_view);
     }
 
-
     public void OnClick(View v) {
-        OnHttp.getInstance().url(Constaint.FILE)
-                .file(new File("/sdcard/Music/aaa.png"))
-                .listener(new IHttpListener<File>() {
-                    @Override
-                    public void onSuccess(File o) {
-
-                    }
-
-                    @Override
-                    public void onError(int code) {
-
-                    }
-                })
+        OnHttp.getInstance().url(Constaint.PIC)
+                .view(imageView)
                 .excute();
     }
 
@@ -50,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.v("TAG", "exponent:" + respone.getExponent());
                 Log.v("TAG", "id:" + respone.getId());
                 Log.v("TAG", "modulus:" + respone.getModulus());
-
             }
 
             @Override

@@ -1,6 +1,5 @@
 package com.absurd.onhttp.base;
 
-import java.util.Objects;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;

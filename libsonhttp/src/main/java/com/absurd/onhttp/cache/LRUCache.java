@@ -1,6 +1,7 @@
-package com.absurd.onhttp.util;
+package com.absurd.onhttp.cache;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,12 +15,13 @@ import java.util.Map;
  */
 
 public class LRUCache {
+    private static LRUCache instence;
     private static final float factor = 0.75f; //扩容因子
     private Map<String, Bitmap> map; //数据存储容器
-    private int cacheSize;//缓存大小
+    private int cacheSize = 100; //缓存大小
 
-    public LRUCache(int cacheSize) {
-        this.cacheSize = cacheSize;
+    public LRUCache() {
+
         int capacity = (int) Math.ceil(cacheSize / factor) + 1;
         map = new LinkedHashMap<String, Bitmap>(capacity, factor, true) {
             private static final long serialVersionUID = 1L;
@@ -35,6 +37,17 @@ public class LRUCache {
         };
     }
 
+
+    public static LRUCache getInstance() {
+        if (instence == null) {
+            synchronized (LRUCache.class) {
+                if (instence == null)
+                    instence = new LRUCache();
+            }
+        }
+        return instence;
+    }
+
     /**
      * 根据key获取value
      *
@@ -42,7 +55,12 @@ public class LRUCache {
      * @return value
      **/
     public synchronized Bitmap get(String key) {
+        Log.v("TAG", "LRUCache-GET---->>" + key);
         return map.get(key);
+    }
+
+    public synchronized boolean exists(String key) {
+        return map.containsKey(key);
     }
 
     /**
