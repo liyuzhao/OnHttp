@@ -54,6 +54,14 @@ public class JsonUtil {
         } else if (Byte.class == field.getType()) {
         } else if (int.class == field.getType()) {
             field.set(obj, jsonObject.getInt(field.getName()));
+        } else if (long.class == field.getType()) {
+            field.set(obj, jsonObject.getLong(field.getName()));
+        } else if (double.class == field.getType()) {
+            field.set(obj, jsonObject.getDouble(field.getName()));
+        } else if (boolean.class == field.getType()) {
+            field.set(obj, jsonObject.getBoolean(field.getName()));
+        } else if (short.class == field.getType()) {
+         
         }
 
     }
