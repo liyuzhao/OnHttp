@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 /**
  * Author: mr-absurd
  * Github: http://github.com/mr-absurd
@@ -47,7 +48,6 @@ public class BitmapCache {
             cache.getValue().compress(Bitmap.CompressFormat.PNG, 100, out);
             out.flush();
             out.close();
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -67,8 +67,8 @@ public class BitmapCache {
         Bitmap bitmap = null;
         if (!bitmapFile.exists()) return null;
         try {
-            bitmap = BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(),getBitmapOption(1));
-        } catch (Exception  e) {
+            bitmap = BitmapFactory.decodeFile(bitmapFile.getAbsolutePath(), getBitmapOption(1));
+        } catch (Exception e) {
             e.printStackTrace();
         }
         Log.v("TAG", "BitmapCache-GET---->>" + key);
@@ -90,5 +90,12 @@ public class BitmapCache {
     public synchronized boolean exists(String key) {
         File bitmap = new File(mCacheDir, key);
         return bitmap.exists();
+    }
+
+    public void clear() {
+        File[] files = mCacheDir.listFiles();
+        for (File file : files) {
+            file.delete();
+        }
     }
 }
