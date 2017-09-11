@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.ImageView;
+
 import com.absurd.onhttp.base.BitmapServiceListener;
 import com.absurd.onhttp.base.FileServiceListener;
 import com.absurd.onhttp.base.IHttpListener;
@@ -13,6 +14,7 @@ import com.absurd.onhttp.base.ServiceListener;
 import com.absurd.onhttp.base.ThreadPoolManager;
 import com.absurd.onhttp.cache.BitmapCache;
 import com.absurd.onhttp.cache.LRUCache;
+
 import java.io.File;
 import java.util.Map;
 import java.util.concurrent.FutureTask;
@@ -36,6 +38,7 @@ public class OnHttp {
     private boolean mCacheHeader = false;
     private ImageView mView;
     private File mFile;
+    private int mResId = 0;
     private Handler handler = new Handler(Looper.getMainLooper());
 
     public static OnHttp getInstance() {
@@ -90,6 +93,11 @@ public class OnHttp {
         return instance;
     }
 
+    public OnHttp id(int resid) {
+        mResId = resid;
+        return instance;
+    }
+
     public OnHttp file(File file) {
         mFile = file;
         method(GET);
@@ -98,9 +106,21 @@ public class OnHttp {
     }
 
     public void excute() {
+        loadDefault();
         if (!checkParam(mView, mUrl.replace("/", "_").replace(":", "-"), t, mFile)) return;
         sendRequest(mView, mUrl, mMethod, mHeaders, mBody, t, mFile, mHttpListener);
         clear();
+    }
+
+    private void loadDefault() {
+        if (mResId != 0 & mView != null) {
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mView.setImageResource(mResId);
+                }
+            });
+        }
     }
 
     private boolean checkParam(final ImageView view, String url, Class<?> t, File file) {
@@ -150,6 +170,7 @@ public class OnHttp {
         this.mUrl = "";
         this.mHttpListener = null;
         mMethod = 1;
+        mResId = 0;
         mView = null;
         mFile = null;
     }

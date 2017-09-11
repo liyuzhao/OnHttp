@@ -61,7 +61,7 @@ public class JsonUtil {
         } else if (boolean.class == field.getType()) {
             field.set(obj, jsonObject.getBoolean(field.getName()));
         } else if (short.class == field.getType()) {
-         
+
         }
 
     }
