@@ -8,10 +8,12 @@ import android.widget.ImageView;
 
 import com.absurd.onhttp.base.BitmapServiceListener;
 import com.absurd.onhttp.base.FileServiceListener;
+import com.absurd.onhttp.base.IHeaderListener;
 import com.absurd.onhttp.base.IHttpListener;
 import com.absurd.onhttp.base.IServiceListener;
 import com.absurd.onhttp.base.ServiceListener;
 import com.absurd.onhttp.base.ThreadPoolManager;
+import com.absurd.onhttp.base.UpdataServiceListener;
 import com.absurd.onhttp.cache.BitmapCache;
 import com.absurd.onhttp.cache.LRUCache;
 
@@ -39,6 +41,8 @@ public class OnHttp {
     private ImageView mView;
     private File mFile;
     private int mResId = 0;
+    private boolean mIsUpdataFile = false;
+    private IHeaderListener mHeaderListener;
     private Handler handler = new Handler(Looper.getMainLooper());
 
     public static OnHttp getInstance() {
@@ -93,6 +97,11 @@ public class OnHttp {
         return instance;
     }
 
+    public OnHttp updata(boolean isUpdata) {
+        mIsUpdataFile = isUpdata;
+        return instance;
+    }
+
     public OnHttp id(int resid) {
         mResId = resid;
         return instance;
@@ -105,10 +114,15 @@ public class OnHttp {
         return instance;
     }
 
+    public OnHttp headerListener(IHeaderListener listener) {
+        mHeaderListener = listener;
+        return instance;
+    }
+
     public void excute() {
         loadDefault();
-        if (!checkParam(mView, mUrl.replace("/", "_").replace(":", "-"), t, mFile)) return;
-        sendRequest(mView, mUrl, mMethod, mHeaders, mBody, t, mFile, mHttpListener);
+        if (!checkParam(mView, mUrl, t, mFile,mIsUpdataFile)) return;
+        sendRequest(mView, mUrl, mMethod, mHeaders, mBody, mIsUpdataFile, t, mFile, mHttpListener, mHeaderListener);
         clear();
     }
 
@@ -123,7 +137,7 @@ public class OnHttp {
         }
     }
 
-    private boolean checkParam(final ImageView view, String url, Class<?> t, File file) {
+    private boolean checkParam(final ImageView view, String url, Class<?> t, File file, boolean isupdata) {
         if (url.equalsIgnoreCase("")) {
             Log.e("OnHttp", "url is null");
             return false;
@@ -133,12 +147,13 @@ public class OnHttp {
             return false;
         }
         if (file != null) {
-            if (file.exists()) {
+            if (file.exists() && isupdata == false) {
                 Log.e("OnHttp", "file is exists (" + file.getAbsolutePath() + ")");
                 return false;
             }
         }
         if (view != null) {
+            url = url.replace("/", "_").replace(":", "-");
             if (LRUCache.getInstance().exists(url)) {
                 final Bitmap bitmap = LRUCache.getInstance().get(url);
                 handler.post(new Runnable() {
@@ -171,21 +186,28 @@ public class OnHttp {
         this.mHttpListener = null;
         mMethod = 1;
         mResId = 0;
+        mIsUpdataFile = false;
         mView = null;
         mFile = null;
     }
 
 
-    private <T, M> void sendRequest(ImageView view, String url, int method, Map<String, String> header, Map<String, String> body, Class<T> clazz, File file, IHttpListener<M> httpListener) {
+    private <T, M> void sendRequest(ImageView view, String url, int method, Map<String, String> header, Map<String, String> body, boolean isUpdata, Class<T> clazz, File file, IHttpListener<M> httpListener, IHeaderListener headerListener) {
         IServiceListener serviceListener;
-        if (mView != null) {
+        if (view != null) {
             serviceListener = new BitmapServiceListener(view, httpListener, url);
-        } else if (mFile != null) {
+            Log.v("TAG", "BitmapServiceListener");
+        } else if (isUpdata == true && file != null) {
+            serviceListener = new UpdataServiceListener(clazz, httpListener);
+            Log.v("TAG", "UpdataServiceListener");
+        } else if (file != null) {
             serviceListener = new FileServiceListener(file, httpListener);
+            Log.v("TAG", "FileServiceListener");
         } else {
             serviceListener = new ServiceListener(clazz, httpListener);
+            Log.v("TAG", "ServiceListener");
         }
-        HttpTask httpTask = new HttpTask(url, method, header, body, serviceListener);
+        HttpTask httpTask = new HttpTask(url, method, header, body, isUpdata, file, serviceListener, headerListener);
         ThreadPoolManager.getInstance().excute(new FutureTask<Object>(httpTask, null));
     }
 

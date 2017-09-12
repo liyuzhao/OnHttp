@@ -1,5 +1,7 @@
 package com.absurd.onhttp.base;
 
+import com.absurd.onhttp.base.base.BaseHttpService;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,33 +19,7 @@ import java.util.Map;
  * Emile:4884280@qq.com
  */
 
-public class HttpService implements IHttpService {
-    private IServiceListener mListener;
-    private URL mUrl;
-    private Map<String, String> mBody;
-    private Map<String, String> mHeader;
-    private HttpURLConnection mUrlConnection;
-    private byte[] mPostData;
-    private int mMethod;
-
-    @Override
-    public void serUrl(String url) {
-        try {
-            this.mUrl = new URL(url);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void setheader(Map<String, String> header) {
-        this.mHeader = header;
-    }
-
-    @Override
-    public void setBody(Map<String, String> body) {
-        this.mBody = body;
-    }
+public class HttpService extends BaseHttpService {
 
     @Override
     public void excute() {
@@ -54,17 +30,6 @@ public class HttpService implements IHttpService {
             mListener.onSuccess(in);
             mUrlConnection.disconnect();
         }
-
-    }
-
-    @Override
-    public void setHttpCallBack(IServiceListener listener) {
-        this.mListener = listener;
-    }
-
-    @Override
-    public void setMethod(int method) {
-        this.mMethod = method;
 
     }
 
@@ -99,7 +64,7 @@ public class HttpService implements IHttpService {
         }
     }
 
-    private void post() {
+    protected void post() {
         try {
             StringBuilder tempParams = new StringBuilder();
             int pos = 0;
@@ -157,16 +122,14 @@ public class HttpService implements IHttpService {
             }
             mUrlConnection.connect();
             if (mUrlConnection.getResponseCode() == 200) {
+                if (mHeaderListener != null)
+                    mHeaderListener.onHeader(mUrlConnection.getHeaderFields());
                 inputStream = mUrlConnection.getInputStream();
-
             } else {
                 mListener.error(mUrlConnection.getResponseCode());
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-//            if (mUrlConnection != null)
-//                mUrlConnection.disconnect();
         }
         return inputStream;
     }

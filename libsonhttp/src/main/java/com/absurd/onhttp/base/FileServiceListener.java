@@ -3,6 +3,8 @@ package com.absurd.onhttp.base;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.absurd.onhttp.base.base.BaseServiceListener;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,10 +16,9 @@ import java.io.InputStream;
  * Data: 2017/9/7.
  */
 
-public class FileServiceListener<T> implements IServiceListener {
+public class FileServiceListener<T> extends BaseServiceListener {
     private File file;
-    private Handler hander = new Handler(Looper.getMainLooper());
-    private IHttpListener<T> listener;
+
 
     public FileServiceListener(File file, IHttpListener<T> listener) {
         this.file = file;

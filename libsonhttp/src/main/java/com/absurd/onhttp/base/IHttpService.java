@@ -1,5 +1,6 @@
 package com.absurd.onhttp.base;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -20,4 +21,8 @@ public interface IHttpService {
     void setHttpCallBack(IServiceListener listener);
 
     void setMethod(int method);
+
+    void setHeaderCallBack(IHeaderListener listener);
+
+    void setFile(File file);
 }
