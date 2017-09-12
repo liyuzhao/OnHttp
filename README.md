@@ -37,4 +37,93 @@ Add it in your root build.gradle at the end of repositories:
 BitmapCache.getInstance.size();
 // clear all bitmap in local device
 BitmapCache.getInstance.clear();
+// set cache location 
+BitmapCache.getInstance.setPath(String path);
+```
+## Code 
+---
+```Java
+	// response automatically convert to javabean
+ 	Map<String, String> body = new HashMap<String, String>();
+        body.put("name", "admin");
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Cookie", "WSJ=546546546546432132134658");
+        OnHttp.getInstance()
+                .url("http://118.123.11.98:50501/demo/user/vertify")
+                .clazz(Respone.class)
+                .method(OnHttp.POST)
+                .body(body)
+                .headers(headers)
+                .listener(new IHttpListener<Respone>() {
+                    @Override
+                    public void onSuccess(Respone respone) {
+                        Log.v("TAG", "exponent:" + respone.getExponent());
+                        Log.v("TAG", "id:" + respone.getId());
+                        Log.v("TAG", "modulus:" + respone.getModulus());
+                    }
+
+                    @Override
+                    public void onError(int code) {
+
+                    }
+                })
+                .excute();
+```
+---
+```Java
+	// response automatically convert to Bitmap
+        OnHttp.getInstance().url(Constaint.PIC).clazz(Bitmap.class).listener(new IHttpListener<Bitmap>() {
+            @Override
+            public void onSuccess(Bitmap bitmap) {
+                
+            }
+
+            @Override
+            public void onError(int code) {
+
+            }
+        }).excute();
+```
+---
+```Java
+  OnHttp.getInstance().url(Constaint.PIC)
+                .view(imageView)
+                .excute();
+```
+---
+```Java
+ OnHttp.getInstance().url(Constaint.PIC)
+ 		//The image is not loaded successfully before the resource image appears, this method is optional
+ 		.id(R.mipmap.ic_launcher)
+                .view(imageView)
+                .excute();
+```
+---
+```Java
+	/Add the headerListener method to get the response header
+        OnHttp.getInstance()
+                .url("http://118.123.11.98:50501/demo/user/vertify")
+                .clazz(Respone.class)
+                .method(OnHttp.POST)
+                .listener(new IHttpListener<Respone>() {
+                    @Override
+                    public void onSuccess(Respone respone) {
+                        Log.v("TAG", "exponent:" + respone.getExponent());
+                        Log.v("TAG", "id:" + respone.getId());
+                        Log.v("TAG", "modulus:" + respone.getModulus());
+                    }
+
+                    @Override
+                    public void onError(int code) {
+
+                    }
+                })
+                .headerListener(new IHeaderListener() {
+                    @Override
+                    public void onHeader(Map<String, List<String>> headers) {
+                        
+                    }
+                })
+                .excute();
+
 ```
