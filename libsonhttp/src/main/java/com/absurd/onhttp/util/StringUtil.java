@@ -6,6 +6,9 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -34,5 +37,22 @@ public class StringUtil {
             e.printStackTrace();
         }
         return content;
+    }
+
+    public static Map<String, String> javaBeanToMap(Object o) {
+        if (o.getClass().getName().endsWith(".Map") | o.getClass().getName().endsWith("HashMap"))
+            return (Map<String, String>) o;
+        Map<String, String> map = new HashMap<>();
+        Field[] fields = o.getClass().getDeclaredFields();
+        System.out.print(o.getClass().getName());
+        try {
+            for (Field field : fields) {
+                field.setAccessible(true);
+                map.put(field.getName(), field.get(o).toString());
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return map;
     }
 }

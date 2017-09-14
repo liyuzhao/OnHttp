@@ -7,11 +7,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.absurd.demo_onhttp.entity.UserResult;
+import com.absurd.demo_onhttp.entity.Vertification;
+import com.absurd.demo_onhttp.util.RSAUtil;
 import com.absurd.onhttp.OnHttp;
 import com.absurd.onhttp.base.IHeaderListener;
 import com.absurd.onhttp.base.IHttpListener;
 
 import java.io.File;
+import java.security.interfaces.RSAPublicKey;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,8 +36,66 @@ public class MainActivity extends AppCompatActivity {
         //  loadimg();
 //        getimg();
 //        getHead();
-        updata();
+        //  updata();
+        vertify();
     }
+
+    private void vertify() {
+        OnHttp.getInstance().url(Constaint.VERTIFY).clazz(Vertification.class).listener(new IHttpListener<Vertification>() {
+            @Override
+            public void onSuccess(Vertification vertification) {
+                Log.v("TAG", vertification.toString());
+                user(vertification);
+             //   adduser(vertification);
+            }
+
+            @Override
+            public void onError(int code) {
+
+            }
+        }).excute();
+    }
+
+    private void adduser(Vertification vertification) {
+        Map<String, String> body = new HashMap<>();
+        body.put("id", vertification.getId() + "");
+        RSAPublicKey pubKey = RSAUtil.getPublicKey(vertification.getModulus(), vertification.getExponent());
+        body.put("userid", RSAUtil.encryptByPublicKey("456qeqwdeqwdqw123", pubKey));
+        body.put("country", "China");
+        body.put("gender", "1");
+        body.put("sign","天空一生巨响老子闪亮登场");
+        body.put("nickname","雷锋");
+        body.put("avator","");
+        body.put("province","广西");
+        body.put("city","桂林");
+        OnHttp.getInstance().method(OnHttp.POST).url(Constaint.ADDUSER).body(body).excute();
+    }
+
+    private void userinfo(String cookie){
+        Map<String, String> head = new HashMap<>();
+        head.put("cookie",cookie);
+        OnHttp.getInstance().body(head).url(Constaint.USERINFO).method(OnHttp.GET).excute();
+    }
+
+    private void user(Vertification vertification) {
+        Map<String, String> body = new HashMap<>();
+        body.put("id", vertification.getId() + "");
+        RSAPublicKey pubKey = RSAUtil.getPublicKey(vertification.getModulus(), vertification.getExponent());
+        body.put("userid", RSAUtil.encryptByPublicKey("456qeqwdeqwdqw123", pubKey));
+        OnHttp.getInstance().url(Constaint.USER).body(body).clazz(UserResult.class).method(OnHttp.POST).listener(new IHttpListener<UserResult>() {
+            @Override
+            public void onSuccess(UserResult user) {
+                Log.v("TAG", user.toString());
+                userinfo(user.getCookie());
+            }
+
+            @Override
+            public void onError(int code) {
+
+            }
+        }).excute();
+    }
+
 
     private void updata() {
         OnHttp.getInstance().updata(true).file(new File("/sdcard/Music/apk.patch")).url(Constaint.PIC).excute();
