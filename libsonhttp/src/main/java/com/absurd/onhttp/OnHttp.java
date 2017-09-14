@@ -62,7 +62,7 @@ public class OnHttp {
     }
 
     public OnHttp headers(Map<String, String> header) {
-        this.mHeaders = header;
+        this.mHeaders = StringUtil.javaBeanToMap(header);
         return instance;
     }
 
@@ -122,7 +122,7 @@ public class OnHttp {
 
     public void excute() {
         loadDefault();
-        if (!checkParam(mView, mUrl, t, mFile,mIsUpdataFile)) return;
+        if (!checkParam(mView, mUrl, t, mFile, mIsUpdataFile)) return;
         sendRequest(mView, mUrl, mMethod, mHeaders, mBody, mIsUpdataFile, t, mFile, mHttpListener, mHeaderListener);
         clear();
     }
