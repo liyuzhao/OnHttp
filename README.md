@@ -28,9 +28,6 @@ Add it in your root build.gradle at the end of repositories:
 ```
 ---
 # Instruction
-## Class OnHttp
-![](http://i2.bvimg.com/602270/103d0108588c90cb.png)
-
 ## BitmapCache
 ```Java
 //get size of bitmap in local device
