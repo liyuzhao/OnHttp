@@ -22,6 +22,7 @@ public class JsonUtil {
             JSONObject json = new JSONObject(content);
             Field[] fields = obj.getClass().getDeclaredFields();
             for (Field field : fields) {
+                if (field.getName().contains("serialVersionUID")) continue;
                 field.setAccessible(true);
                 if (json.isNull(field.getName())) continue;
                 setField(obj, field, json);

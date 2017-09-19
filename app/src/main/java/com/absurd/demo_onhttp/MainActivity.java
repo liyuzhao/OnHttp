@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.absurd.demo_onhttp.entity.UserResult;
+import com.absurd.demo_onhttp.entity.Userinfo;
 import com.absurd.demo_onhttp.entity.Vertification;
 import com.absurd.demo_onhttp.util.RSAUtil;
 import com.absurd.onhttp.OnHttp;
@@ -37,8 +38,38 @@ public class MainActivity extends AppCompatActivity {
 //        getimg();
 //        getHead();
         //  updata();
-        vertify();
+     //   vertify();
+        login();
     }
+
+    private void login() {
+        //appid=adroid123456city=Guilincountry=CNheadimgurl=  nickname=Alone openid= province= sex=1
+        Userinfo info=new Userinfo();
+        info.setAppid("adroid123456");
+        info.setCity("Guilin");
+        info.setCountry("CN");
+        info.setHeadimgurl("http://wx.qlogo.cn/mmopen/vi_32/lQ4iaw3AW0OStGT4o6ZeK9LLwr3d9d8Qx9M4XxENiaLM2DJWvx2ClR064WK1aiaQYGP7ib2nvfHHXjcEhMb6SGgzHA/0");
+        info.setOpenid("odZUJwU0vPAhmkA8XC5r3KvmtQsQ");
+        info.setSex("1");
+        info.setNickname("Alone");
+        info.setProvince("Guangxi");
+        info.setSign("1bdc6fabc42147edf1aa4bf9792aad30");
+        OnHttp.getInstance().url("http://192.168.1.204/fastadmin/public/index.php/api/client/wechat")
+                .clazz(String.class).method(OnHttp.POST)
+                .body(info)
+                .listener(new IHttpListener<String>() {
+                    @Override
+                    public void onSuccess(String o) {
+
+                    }
+
+                    @Override
+                    public void onError(int code) {
+
+                    }
+                }).excute();
+    }
+
 
     private void vertify() {
         OnHttp.getInstance().url(Constaint.VERTIFY).clazz(Vertification.class).listener(new IHttpListener<Vertification>() {

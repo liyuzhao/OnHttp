@@ -48,8 +48,9 @@ public class StringUtil {
         try {
             for (Field field : fields) {
                 field.setAccessible(true);
-                if (null != field.get(o))
-                    map.put(field.getName(), field.get(o).toString());
+                if (null != field.get(o)){
+                    if (!field.getName().contains("serialVersionUID"))
+                    map.put(field.getName(), field.get(o).toString());}
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
