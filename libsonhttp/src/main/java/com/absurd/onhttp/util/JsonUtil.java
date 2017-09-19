@@ -38,9 +38,30 @@ public class JsonUtil {
         return obj;
     }
 
+    public static Object newObject(Class<?> clazz, JSONObject json ) {
+        Object obj = null;
+        try {
+            obj = clazz.newInstance();
+            Field[] fields = obj.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                if (field.getName().contains("serialVersionUID")) continue;
+                field.setAccessible(true);
+                if (json.isNull(field.getName())) continue;
+                setField(obj, field, json);
+            }
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return obj;
+    }
     private static void setField(Object obj, Field field, JSONObject jsonObject) throws JSONException, IllegalAccessException {
-
-        if (Integer.class == field.getType()) {
+        if (jsonObject.optJSONObject(field.getName()) != null) {
+            field.set(obj, newObject(field.getType(), jsonObject.optJSONObject(field.getName())));
+        } else if (Integer.class == field.getType()) {
             field.set(obj, jsonObject.getInt(field.getName()));
         } else if (String.class == field.getType()) {
             field.set(obj, jsonObject.getString(field.getName()));
