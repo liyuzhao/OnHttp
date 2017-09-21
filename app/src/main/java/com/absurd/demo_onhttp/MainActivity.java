@@ -16,7 +16,12 @@ import com.absurd.onhttp.base.IHeaderListener;
 import com.absurd.onhttp.base.IHttpListener;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.security.interfaces.RSAPublicKey;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,13 +43,13 @@ public class MainActivity extends AppCompatActivity {
 //        getimg();
 //        getHead();
         //  updata();
-     //   vertify();
+        //   vertify();
         login();
     }
 
     private void login() {
         //appid=adroid123456city=Guilincountry=CNheadimgurl=  nickname=Alone openid= province= sex=1
-        Userinfo info=new Userinfo();
+        Userinfo info = new Userinfo();
         info.setAppid("adroid123456");
         info.setCity("Guilin");
         info.setCountry("CN");
@@ -77,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(Vertification vertification) {
                 Log.v("TAG", vertification.toString());
                 user(vertification);
-             //   adduser(vertification);
+                //   adduser(vertification);
             }
 
             @Override
@@ -94,17 +99,17 @@ public class MainActivity extends AppCompatActivity {
         body.put("userid", RSAUtil.encryptByPublicKey("456qeqwdeqwdqw123", pubKey));
         body.put("country", "China");
         body.put("gender", "1");
-        body.put("sign","天空一生巨响老子闪亮登场");
-        body.put("nickname","雷锋");
-        body.put("avator","");
-        body.put("province","广西");
-        body.put("city","桂林");
+        body.put("sign", "天空一生巨响老子闪亮登场");
+        body.put("nickname", "雷锋");
+        body.put("avator", "");
+        body.put("province", "广西");
+        body.put("city", "桂林");
         OnHttp.getInstance().method(OnHttp.POST).url(Constaint.ADDUSER).body(body).excute();
     }
 
-    private void userinfo(String cookie){
+    private void userinfo(String cookie) {
         Map<String, String> head = new HashMap<>();
-        head.put("cookie",cookie);
+        head.put("cookie", cookie);
         OnHttp.getInstance().body(head).url(Constaint.USERINFO).method(OnHttp.GET).excute();
     }
 
@@ -208,5 +213,82 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .excute();
     }
+
+
+    public static void main(String[] argv) {
+        Class<?> classResponse=Respone.class;
+        Field[] fields=classResponse.getDeclaredFields();
+
+//        for (Field field : fields) {
+//            field.setAccessible(true);
+//            System.out.print(field.getType().getName()+"\n");
+//        }
+
+
+
+        Class<?> classType = Respone.class;
+//        for (Field field : classType.getDeclaredFields()) {
+//            Class<?> c = field.getType(); //获得属性的类型
+//            for (TypeVariable tv : c.getTypeParameters()) { //获得属性类型的泛型参数信息
+//                System.out.println(tv);
+//                System.out.println(tv.getBounds()[0]); //泛型的类型
+//            }
+//        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        for(Field f : fields)
+        {
+            Class fieldClazz = f.getType(); // 得到field的class及类型全路径
+
+            if(fieldClazz.isPrimitive())  continue;  //【1】 //判断是否为基本类型
+
+            if(fieldClazz.getName().startsWith("java.lang")) continue; //getName()返回field的类型全路径；
+
+            if(fieldClazz.isAssignableFrom(List.class)) //【2】
+            {
+                Type fc = f.getGenericType(); // 关键的地方，如果是List类型，得到其Generic的类型
+
+                if(fc == null) continue;
+
+                if(fc instanceof ParameterizedType) // 【3】如果是泛型参数的类型
+                {
+                    ParameterizedType pt = (ParameterizedType) fc;
+
+                    Class genericClazz = (Class)pt.getActualTypeArguments()[0]; //【4】 得到泛型里的class类型对象。
+
+
+                    System.out.print(f.getName()+"\n");
+                    System.out.print(genericClazz.getName()+"\n");
+
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+
 }
 

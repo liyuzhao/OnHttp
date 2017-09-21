@@ -1,5 +1,7 @@
 package com.absurd.demo_onhttp;
 
+import java.util.List;
+
 /**
  * Author: mr-absurd
  * Github: http://github.com/mr-absurd
@@ -11,6 +13,8 @@ public class Respone {
     private int id;
     private String modulus;
     private int exponent;
+
+    private List<String> list;
 
     public int getId() {
         return id;

@@ -2,10 +2,15 @@ package com.absurd.onhttp.util;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -38,7 +43,7 @@ public class JsonUtil {
         return obj;
     }
 
-    public static Object newObject(Class<?> clazz, JSONObject json ) {
+    public static Object newObject(Class<?> clazz, JSONObject json) {
         Object obj = null;
         try {
             obj = clazz.newInstance();
@@ -58,8 +63,20 @@ public class JsonUtil {
         }
         return obj;
     }
+
     private static void setField(Object obj, Field field, JSONObject jsonObject) throws JSONException, IllegalAccessException {
-        if (jsonObject.optJSONObject(field.getName()) != null) {
+        if (jsonObject.optJSONArray(field.getName()) != null) {
+            Class<?> clazz = getTypeFromList(field);
+            if (clazz != null) {
+                JSONArray array = jsonObject.getJSONArray(field.getName());
+                ArrayList list = new ArrayList<>();
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject object = array.getJSONObject(i);
+                    list.add(newObject(clazz, object));
+                }
+                field.set(obj, list);
+            }
+        } else if (jsonObject.optJSONObject(field.getName()) != null) {
             field.set(obj, newObject(field.getType(), jsonObject.optJSONObject(field.getName())));
         } else if (Integer.class == field.getType()) {
             field.set(obj, jsonObject.getInt(field.getName()));
@@ -87,4 +104,18 @@ public class JsonUtil {
         }
 
     }
+
+    private static Class<?> getTypeFromList(Field field) {
+        if (field.getType().isAssignableFrom(List.class)) {
+            Type type = field.getGenericType();
+            if (type == null) return null;
+            if (type instanceof ParameterizedType) {
+                ParameterizedType parameterType = (ParameterizedType) type;
+                return (Class) parameterType.getActualTypeArguments()[0];
+            }
+        }
+        return null;
+    }
+
+
 }
