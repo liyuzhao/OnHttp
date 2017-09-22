@@ -27,7 +27,7 @@ public class JsonUtil {
             JSONObject json = new JSONObject(content);
             Field[] fields = obj.getClass().getDeclaredFields();
             for (Field field : fields) {
-                if (field.getName().contains("serialVersionUID")) continue;
+                if (field.getName().contains("serialVersionUID")|field.getName().contains("$change")) continue;
                 field.setAccessible(true);
                 if (json.isNull(field.getName())) continue;
                 setField(obj, field, json);
@@ -49,7 +49,7 @@ public class JsonUtil {
             obj = clazz.newInstance();
             Field[] fields = obj.getClass().getDeclaredFields();
             for (Field field : fields) {
-                if (field.getName().contains("serialVersionUID")) continue;
+                if (field.getName().contains("serialVersionUID")|field.getName().contains("$change")) continue;
                 field.setAccessible(true);
                 if (json.isNull(field.getName())) continue;
                 setField(obj, field, json);

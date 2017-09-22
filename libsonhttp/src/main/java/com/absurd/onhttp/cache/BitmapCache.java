@@ -2,7 +2,6 @@ package com.absurd.onhttp.cache;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import com.absurd.onhttp.entity.CacheData;
 
@@ -34,6 +33,23 @@ public class BitmapCache {
         return instance;
     }
 
+    public static BitmapCache getInstance(String path) {
+        if (instance == null) {
+            synchronized (BitmapCache.class) {
+                if (instance == null)
+                    instance = new BitmapCache(path);
+            }
+        }
+        return instance;
+    }
+
+    public BitmapCache(String path) {
+        mCacheDir = new File(path);
+        if (!mCacheDir.exists()) {
+            mCacheDir.mkdirs();
+        }
+    }
+
     public BitmapCache() {
         mCacheDir = new File(mCacheDirPath);
         if (!mCacheDir.exists()) {
@@ -55,13 +71,6 @@ public class BitmapCache {
         }
     }
 
-    public void setPath(String path) {
-        mCacheDir = new File(path);
-        if (!mCacheDir.exists()) {
-            mCacheDir.mkdirs();
-        }
-    }
-
     public synchronized Bitmap get(String key) {
         File bitmapFile = new File(mCacheDir, key);
         Bitmap bitmap = null;
@@ -71,7 +80,6 @@ public class BitmapCache {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.v("TAG", "BitmapCache-GET---->>" + key);
         return bitmap;
     }
 

@@ -7,10 +7,7 @@ import com.absurd.onhttp.base.base.BaseHttpService;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Author: mr-absurd
@@ -23,8 +20,7 @@ public class UpdataService extends BaseHttpService {
 
     @Override
     public void excute() {
-        Log.d("TAG", "excute");
-        try {
+         try {
             mUrlConnection = (HttpURLConnection) mUrl.openConnection();
             mUrlConnection.setDoOutput(true);
             //设置该连接允许写入
@@ -89,8 +85,7 @@ public class UpdataService extends BaseHttpService {
                 mListener.error(statusCode);
             }
         } catch (Exception e) {
-            Log.e("TAG", e.toString());
-            e.printStackTrace();
+             e.printStackTrace();
         }
     }
 

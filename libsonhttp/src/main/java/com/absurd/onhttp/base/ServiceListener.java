@@ -1,11 +1,6 @@
 package com.absurd.onhttp.base;
-import android.graphics.BitmapFactory;
-import android.os.Handler;
-import android.os.Looper;
-
 import com.absurd.onhttp.base.base.BaseServiceListener;
-import com.absurd.onhttp.util.JsonUtil;
-import com.absurd.onhttp.util.StringUtil;
+
 
 import java.io.InputStream;
 

@@ -55,8 +55,7 @@ public class LRUCache {
      * @return value
      **/
     public synchronized Bitmap get(String key) {
-        Log.v("TAG", "LRUCache-GET---->>" + key);
-        return map.get(key);
+         return map.get(key);
     }
 
     public synchronized boolean exists(String key) {

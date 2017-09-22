@@ -1,10 +1,7 @@
 package com.absurd.onhttp.util;
 
-import android.util.Log;
-
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
+ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -49,7 +46,7 @@ public class StringUtil {
             for (Field field : fields) {
                 field.setAccessible(true);
                 if (null != field.get(o)){
-                    if (!field.getName().contains("serialVersionUID"))
+                    if (!field.getName().contains("serialVersionUID")|field.getName().contains("$change"))
                     map.put(field.getName(), field.get(o).toString());}
             }
         } catch (IllegalAccessException e) {

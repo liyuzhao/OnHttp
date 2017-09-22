@@ -197,17 +197,13 @@ public class OnHttp {
         IServiceListener serviceListener;
         if (view != null) {
             serviceListener = new BitmapServiceListener(view, httpListener, url);
-            Log.v("TAG", "BitmapServiceListener");
-        } else if (isUpdata == true && file != null) {
+         } else if (isUpdata == true && file != null) {
             serviceListener = new UpdataServiceListener(clazz, httpListener);
-            Log.v("TAG", "UpdataServiceListener");
-        } else if (file != null) {
+         } else if (file != null) {
             serviceListener = new FileServiceListener(file, httpListener);
-            Log.v("TAG", "FileServiceListener");
-        } else {
+         } else {
             serviceListener = new ServiceListener(clazz, httpListener);
-            Log.v("TAG", "ServiceListener");
-        }
+         }
         HttpTask httpTask = new HttpTask(url, method, header, body, isUpdata, file, serviceListener, headerListener);
         ThreadPoolManager.getInstance().excute(new FutureTask<Object>(httpTask, null));
     }

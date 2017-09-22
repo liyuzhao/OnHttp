@@ -1,8 +1,5 @@
 package com.absurd.onhttp.base;
 
-import android.os.Handler;
-import android.os.Looper;
-
 import com.absurd.onhttp.base.base.BaseServiceListener;
 
 import java.io.File;
