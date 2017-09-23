@@ -121,18 +121,18 @@ public class OnHttp {
     }
 
     public void excute() {
-        loadDefault();
+        loadDefault(mResId, mView);
         if (!checkParam(mView, mUrl, t, mFile, mIsUpdataFile)) return;
         sendRequest(mView, mUrl, mMethod, mHeaders, mBody, mIsUpdataFile, t, mFile, mHttpListener, mHeaderListener);
         clear();
     }
 
-    private void loadDefault() {
-        if (mResId != 0 & mView != null) {
+    private void loadDefault(final int id, final ImageView view) {
+        if (id != 0 & view != null) {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mView.setImageResource(mResId);
+                    view.setImageResource(id);
                 }
             });
         }
@@ -197,13 +197,13 @@ public class OnHttp {
         IServiceListener serviceListener;
         if (view != null) {
             serviceListener = new BitmapServiceListener(view, httpListener, url);
-         } else if (isUpdata == true && file != null) {
+        } else if (isUpdata == true && file != null) {
             serviceListener = new UpdataServiceListener(clazz, httpListener);
-         } else if (file != null) {
+        } else if (file != null) {
             serviceListener = new FileServiceListener(file, httpListener);
-         } else {
+        } else {
             serviceListener = new ServiceListener(clazz, httpListener);
-         }
+        }
         HttpTask httpTask = new HttpTask(url, method, header, body, isUpdata, file, serviceListener, headerListener);
         ThreadPoolManager.getInstance().excute(new FutureTask<Object>(httpTask, null));
     }
