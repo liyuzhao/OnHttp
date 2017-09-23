@@ -18,16 +18,13 @@ import java.io.IOException;
 
 public class BitmapCache {
     private static BitmapCache instance;
-
-    private String mCacheDirPath = "/sdcard/Music/";
-
     private File mCacheDir;
 
     public static BitmapCache getInstance() {
         if (instance == null) {
             synchronized (BitmapCache.class) {
                 if (instance == null)
-                    instance = new BitmapCache();
+                    throw new RuntimeException("You must first implement a parameter constructor before you use OnHttp !");
             }
         }
         return instance;
@@ -50,12 +47,6 @@ public class BitmapCache {
         }
     }
 
-    public BitmapCache() {
-        mCacheDir = new File(mCacheDirPath);
-        if (!mCacheDir.exists()) {
-            mCacheDir.mkdirs();
-        }
-    }
 
     public synchronized void put(CacheData cache) {
         File bitmapFile = new File(mCacheDir, cache.getKey());
