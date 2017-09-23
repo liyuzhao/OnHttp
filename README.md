@@ -31,11 +31,11 @@ Add it in your root build.gradle at the end of repositories:
 ## BitmapCache
 ```Java
 //get size of bitmap in local device
-BitmapCache.getInstance.size();
+BitmapCache.getInstance().size();
 // clear all bitmap in local device
-BitmapCache.getInstance.clear();
+BitmapCache.getInstance().clear();
 // set cache location 
-BitmapCache.getInstance.setPath(String path);
+BitmapCache.getInstance(String path);
 ```
 ## Code 
 ---
