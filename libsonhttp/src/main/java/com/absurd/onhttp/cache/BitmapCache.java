@@ -17,14 +17,14 @@ import java.io.IOException;
  */
 
 public class BitmapCache {
-    private static BitmapCache instance;
+    private static volatile BitmapCache instance = null;
     private File mCacheDir;
 
     public static BitmapCache getInstance() {
         if (instance == null) {
             synchronized (BitmapCache.class) {
                 if (instance == null)
-                    throw new RuntimeException("You must first implement a parameter constructor before you use OnHttp !");
+                    throw new RuntimeException("You must first implement a parameter constructor in BitmapCache before you use OnHttp !");
             }
         }
         return instance;
