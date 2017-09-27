@@ -122,8 +122,9 @@ public class OnHttp {
 
     public void excute() {
         loadDefault(mResId, mView);
-        if (!checkParam(mView, mUrl, t, mFile, mIsUpdataFile)) return;
-        sendRequest(mView, mUrl, mMethod, mHeaders, mBody, mIsUpdataFile, t, mFile, mHttpListener, mHeaderListener);
+        if (checkParam(mView, mUrl, t, mFile, mIsUpdataFile)) {
+            sendRequest(mView, mUrl, mMethod, mHeaders, mBody, mIsUpdataFile, t, mFile, mHttpListener, mHeaderListener);
+        }
         clear();
     }
 
