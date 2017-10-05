@@ -199,7 +199,7 @@ public class OnHttp {
         if (view != null) {
             serviceListener = new BitmapServiceListener(view, httpListener, url);
         } else if (isUpdata == true && file != null) {
-            serviceListener = new UpdataServiceListener(clazz, httpListener);
+            serviceListener = new ServiceListener(clazz, httpListener);
         } else if (file != null) {
             serviceListener = new FileServiceListener(file, httpListener);
         } else {

@@ -1,4 +1,5 @@
 package com.absurd.onhttp.base;
+
 import com.absurd.onhttp.base.base.BaseServiceListener;
 
 
@@ -29,6 +30,8 @@ public class ServiceListener<T> extends BaseServiceListener {
         } else if (T.getName().equalsIgnoreCase(BITMAP_NAME)) {
             respone = (T) getBitmap(inputStream);
         } else if (T.getName().equalsIgnoreCase(FILE_NAME)) {
+        } else if (T.getName().equalsIgnoreCase(JSONOBJECT_NAME)) {
+            respone = (T) getJSONObject((String) getString(inputStream));
         } else {
             respone = (T) getJson(inputStream);
         }
@@ -43,10 +46,16 @@ public class ServiceListener<T> extends BaseServiceListener {
     }
 
 
-
     @Override
-    public void error(int code) {
-        if (listener != null)
-            listener.onError(code);
+    public void error(final int code) {
+        if (listener != null) {
+            hander.post(new Runnable() {
+                @Override
+                public void run() {
+                    listener.onError(code);
+                }
+            });
+        }
+
     }
 }

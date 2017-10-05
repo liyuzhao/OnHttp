@@ -8,6 +8,9 @@ import com.absurd.onhttp.base.IHttpListener;
 import com.absurd.onhttp.base.IServiceListener;
 import com.absurd.onhttp.util.OnHttpUtil;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.InputStream;
 
 /**
@@ -23,7 +26,7 @@ public class BaseServiceListener<T> implements IServiceListener {
     protected final static String STRING_NAME = "java.lang.String";
     protected final static String BITMAP_NAME = "android.graphics.Bitmap";
     protected final static String FILE_NAME = "java.io.File";
-
+    protected final static String JSONOBJECT_NAME="org.json.JSONObject";
     @Override
     public void onSuccess(InputStream inputStream) {
 
@@ -51,5 +54,15 @@ public class BaseServiceListener<T> implements IServiceListener {
             e.printStackTrace();
         }
         return respone;
+    }
+
+    public T getJSONObject(String s) {
+        JSONObject object = null;
+        try {
+            object = new JSONObject(s);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return (T) object;
     }
 }
