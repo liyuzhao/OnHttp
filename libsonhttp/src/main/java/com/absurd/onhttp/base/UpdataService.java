@@ -7,7 +7,11 @@ import com.absurd.onhttp.base.base.BaseHttpService;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Author: mr-absurd
@@ -16,12 +20,17 @@ import java.net.HttpURLConnection;
  */
 
 public class UpdataService extends BaseHttpService {
-
+    private static final String BOUNDARY = UUID.randomUUID().toString();
+    private static final String PREFIX = "--";
+    private static final String LINE_END = "\r\n";
+    private static final String CONTENT_TYPE = "multipart/form-data";
 
     @Override
     public void excute() {
-         try {
+        try {
             mUrlConnection = (HttpURLConnection) mUrl.openConnection();
+
+
             mUrlConnection.setDoOutput(true);
             //设置该连接允许写入
             mUrlConnection.setDoInput(true);
@@ -33,59 +42,66 @@ public class UpdataService extends BaseHttpService {
             mUrlConnection.setReadTimeout(5 * 1000);   //读取超时
             //设置连接方法post
             mUrlConnection.setRequestMethod("POST");
+            mUrlConnection.setInstanceFollowRedirects(true);
             //设置维持长连接
             mUrlConnection.setRequestProperty("connection", "Keep-Alive");
             //设置文件字符集
+        //    mUrlConnection.setRequestProperty("Charset", "UTF-8");
             mUrlConnection.setRequestProperty("Accept-Charset", "UTF-8");
             //设置文件类型
-            mUrlConnection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + "*****");
-            String name = mFile.getName();
-            DataOutputStream requestStream = new DataOutputStream(mUrlConnection.getOutputStream());
-            requestStream.writeBytes("--" + "*****" + "\r\n");
+            mUrlConnection.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
 
-            //发送文件参数信息
-            StringBuilder tempParams = new StringBuilder();
-            tempParams.append("Content-Disposition: form-data; name=\"" + name + "\"; filename=\"" + name + "\"; ");
-            if (mBody != null) {
-                int pos = 0;
-                int size = mBody.size();
-                for (String key : mBody.keySet()) {
-                    tempParams.append(String.format("%s=\"%s\"", key, mBody.get(key), "utf-8"));
-                    if (pos < size - 1) {
-                        tempParams.append("; ");
-                    }
-                    pos++;
+            DataOutputStream dos = new DataOutputStream(mUrlConnection.getOutputStream());
+            StringBuilder builder = new StringBuilder();
+            if (mBody != null && mBody.size() > 0) {
+                for (Map.Entry<String, String> entry : mBody.entrySet()) {
+                    builder.append(PREFIX).append(BOUNDARY).append(LINE_END);
+                    builder.append("Content-Disposition: form-data; name=\"").append(entry.getKey()).append("\"").append(LINE_END);
+                    builder.append("Content-Type: text/plain; charset=UTF-8").append(LINE_END);
+                    builder.append("Content-Transfer-Encoding: 8bit");
+                    builder.append(LINE_END).append(LINE_END);
+                    builder.append(entry.getValue()).append(LINE_END);
+                    dos.write(builder.toString().getBytes());
+                    builder.delete(0, builder.length());
                 }
             }
-            tempParams.append("\r\n");
-            tempParams.append("Content-Type: application/octet-stream\r\n");
-            tempParams.append("\r\n");
-            String params = tempParams.toString();
-            requestStream.writeBytes(params);
-            //发送文件数据
-            FileInputStream fileInput = new FileInputStream(mFile);
-            int bytesRead;
-            byte[] buffer = new byte[1024];
-            DataInputStream in = new DataInputStream(new FileInputStream(mFile));
-            while ((bytesRead = in.read(buffer)) != -1) {
-                requestStream.write(buffer, 0, bytesRead);
+
+            builder.append(PREFIX).append(BOUNDARY).append(LINE_END);
+            builder.append("Content-Disposition:form-data; name=\"" + mFile.getName() + "\"; filename=\"" + mFile.getAbsolutePath() + "\"" + LINE_END);
+            // 这里配置的Content-type很重要的 ，用于服务器端辨别文件的类型的
+            builder.append("Content-Type: application/octet-stream").append(LINE_END);
+            builder.append("Content-Transfer-Encoding: binary");
+            builder.append(LINE_END).append(LINE_END);
+            dos.write(builder.toString().getBytes());
+            /**上传文件*/
+            InputStream is = new FileInputStream(mFile);
+            //  onUploadProcessListener.initUpload((int)file.length());
+            byte[] bytes = new byte[1024];
+            int len = 0;
+            int curLen = 0;
+            while ((len = is.read(bytes)) != -1) {
+                curLen += len;
+                dos.write(bytes, 0, len);
+                //     onUploadProcessListener.onUploadProcess(curLen);
             }
-            requestStream.writeBytes("\r\n");
-            requestStream.flush();
-            requestStream.writeBytes("--" + "*****" + "--" + "\r\n");
-            requestStream.flush();
-            fileInput.close();
+            is.close();
+
+            dos.write(LINE_END.getBytes());
+            byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END).getBytes();
+            dos.write(end_data);
+            dos.flush();
+
             int statusCode = mUrlConnection.getResponseCode();
             if (statusCode == 200) {
-                // 获取返回的数据
-                if (mHeaderListener != null)
+                if (mHeaderListener != null) {
                     mHeaderListener.onHeader(mUrlConnection.getHeaderFields());
+                }
                 mListener.onSuccess(mUrlConnection.getInputStream());
             } else {
                 mListener.error(statusCode);
             }
         } catch (Exception e) {
-             e.printStackTrace();
+            e.printStackTrace();
         }
     }
 

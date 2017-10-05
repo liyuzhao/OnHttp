@@ -17,7 +17,6 @@ public class UpdataServiceListener<T> extends BaseServiceListener {
     private Handler hander = new Handler(Looper.getMainLooper());
     private IHttpListener<T> listener;
     private Class<?> T;
-
     public UpdataServiceListener(Class<?> T, IHttpListener<T> listener) {
         this.T = T;
         this.listener = listener;

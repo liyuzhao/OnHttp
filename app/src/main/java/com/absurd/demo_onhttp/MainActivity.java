@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import com.absurd.demo_onhttp.entity.UserResult;
 import com.absurd.demo_onhttp.entity.Userinfo;
 import com.absurd.demo_onhttp.entity.Vertification;
+import com.absurd.demo_onhttp.util.Md5Util;
 import com.absurd.demo_onhttp.util.RSAUtil;
 import com.absurd.onhttp.OnHttp;
 import com.absurd.onhttp.base.IHeaderListener;
@@ -44,8 +45,64 @@ public class MainActivity extends AppCompatActivity {
 //        getHead();
         //  updata();
         //   vertify();
-        login();
+        //      login();
+        updata(10016,new File("/sdcard/Music/123.png"));
     }
+
+
+
+
+
+    private void updata(int id, File file) {
+        Map<String, String> body = new HashMap<>();
+        body.put("uid", id + "");
+
+        OnHttp.getInstance()
+                .url( API_UPLOAD_PICTURE)
+                .body(Md5Util.mapToBody(body))
+                .file(file)
+                .updata(true)
+                .clazz(String.class)
+                .method(OnHttp.GET)
+                .listener(new IHttpListener<String>() {
+                    @Override
+                    public void onSuccess(String respone) {
+                            Log.v("TAG","----------"+respone);
+                    }
+
+                    @Override
+                    public void onError(int i) {
+                            Log.v("TAG","-----------"+i);
+                    }
+                })
+                .excute();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private void login() {
         //appid=adroid123456city=Guilincountry=CNheadimgurl=  nickname=Alone openid= province= sex=1
@@ -131,11 +188,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }).excute();
     }
+    public final static String APP_HOST_INERFACE = "http://192.168.0.108:6677";
+    public final static String API_UPLOAD_PICTURE = APP_HOST_INERFACE + "/index.php/api/attachment/upload";
 
 
-    private void updata() {
-        OnHttp.getInstance().updata(true).file(new File("/sdcard/Music/apk.patch")).url(Constaint.PIC).excute();
-    }
 
     private void loadimg() {
 
@@ -216,14 +272,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     public static void main(String[] argv) {
-        Class<?> classResponse=Respone.class;
-        Field[] fields=classResponse.getDeclaredFields();
+        Class<?> classResponse = Respone.class;
+        Field[] fields = classResponse.getDeclaredFields();
 
 //        for (Field field : fields) {
 //            field.setAccessible(true);
 //            System.out.print(field.getType().getName()+"\n");
 //        }
-
 
 
         Class<?> classType = Respone.class;
@@ -236,55 +291,32 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
 
-
-
-
-
-
-
-
-
-
-
-
-        for(Field f : fields)
-        {
+        for (Field f : fields) {
             Class fieldClazz = f.getType(); // 得到field的class及类型全路径
 
-            if(fieldClazz.isPrimitive())  continue;  //【1】 //判断是否为基本类型
+            if (fieldClazz.isPrimitive()) continue;  //【1】 //判断是否为基本类型
 
-            if(fieldClazz.getName().startsWith("java.lang")) continue; //getName()返回field的类型全路径；
+            if (fieldClazz.getName().startsWith("java.lang")) continue; //getName()返回field的类型全路径；
 
-            if(fieldClazz.isAssignableFrom(List.class)) //【2】
+            if (fieldClazz.isAssignableFrom(List.class)) //【2】
             {
                 Type fc = f.getGenericType(); // 关键的地方，如果是List类型，得到其Generic的类型
 
-                if(fc == null) continue;
+                if (fc == null) continue;
 
-                if(fc instanceof ParameterizedType) // 【3】如果是泛型参数的类型
+                if (fc instanceof ParameterizedType) // 【3】如果是泛型参数的类型
                 {
                     ParameterizedType pt = (ParameterizedType) fc;
 
-                    Class genericClazz = (Class)pt.getActualTypeArguments()[0]; //【4】 得到泛型里的class类型对象。
+                    Class genericClazz = (Class) pt.getActualTypeArguments()[0]; //【4】 得到泛型里的class类型对象。
 
 
-                    System.out.print(f.getName()+"\n");
-                    System.out.print(genericClazz.getName()+"\n");
+                    System.out.print(f.getName() + "\n");
+                    System.out.print(genericClazz.getName() + "\n");
 
                 }
             }
         }
-
-
-
-
-
-
-
-
-
-
-
 
 
     }

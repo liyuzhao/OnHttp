@@ -16,7 +16,7 @@ import com.absurd.onhttp.base.ThreadPoolManager;
 import com.absurd.onhttp.base.UpdataServiceListener;
 import com.absurd.onhttp.cache.BitmapCache;
 import com.absurd.onhttp.cache.LRUCache;
-import com.absurd.onhttp.util.StringUtil;
+import com.absurd.onhttp.util.OnHttpUtil;
 
 import java.io.File;
 import java.util.Map;
@@ -62,12 +62,12 @@ public class OnHttp {
     }
 
     public OnHttp headers(Map<String, String> header) {
-        this.mHeaders = StringUtil.javaBeanToMap(header);
+        this.mHeaders = OnHttpUtil.javaBeanToMap(header);
         return instance;
     }
 
     public OnHttp body(Object body) {
-        mBody = StringUtil.javaBeanToMap(body);
+        mBody = OnHttpUtil.javaBeanToMap(body);
         return instance;
     }
 

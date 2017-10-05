@@ -6,8 +6,7 @@ import android.os.Looper;
 
 import com.absurd.onhttp.base.IHttpListener;
 import com.absurd.onhttp.base.IServiceListener;
-import com.absurd.onhttp.util.JsonUtil;
-import com.absurd.onhttp.util.StringUtil;
+import com.absurd.onhttp.util.OnHttpUtil;
 
 import java.io.InputStream;
 
@@ -41,13 +40,13 @@ public class BaseServiceListener<T> implements IServiceListener {
     }
 
     protected T getString(InputStream inputStream) {
-        return (T) StringUtil.streamToString(inputStream);
+        return (T) OnHttpUtil.streamToString(inputStream);
     }
 
     protected T getJson(InputStream inputStream) {
         T respone = null;
         try {
-            respone = (T) JsonUtil.fromJsonString(StringUtil.streamToString(inputStream), T);
+            respone = (T) OnHttpUtil.fromJsonString(OnHttpUtil.streamToString(inputStream), T);
         } catch (Exception e) {
             e.printStackTrace();
         }
