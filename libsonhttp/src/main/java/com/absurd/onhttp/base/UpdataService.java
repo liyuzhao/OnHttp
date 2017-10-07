@@ -46,7 +46,7 @@ public class UpdataService extends BaseHttpService {
             //设置维持长连接
             mUrlConnection.setRequestProperty("connection", "Keep-Alive");
             //设置文件字符集
-        //    mUrlConnection.setRequestProperty("Charset", "UTF-8");
+            //    mUrlConnection.setRequestProperty("Charset", "UTF-8");
             mUrlConnection.setRequestProperty("Accept-Charset", "UTF-8");
             //设置文件类型
             mUrlConnection.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
@@ -67,7 +67,7 @@ public class UpdataService extends BaseHttpService {
             }
 
             builder.append(PREFIX).append(BOUNDARY).append(LINE_END);
-            builder.append("Content-Disposition:form-data; name=\"" + mFile.getName() + "\"; filename=\"" + mFile.getAbsolutePath() + "\"" + LINE_END);
+            builder.append("Content-Disposition:form-data; name=\"" + "file" + "\"; filename=\"" + mFile.getAbsolutePath() + "\"" + LINE_END);
             // 这里配置的Content-type很重要的 ，用于服务器端辨别文件的类型的
             builder.append("Content-Type: application/octet-stream").append(LINE_END);
             builder.append("Content-Transfer-Encoding: binary");
