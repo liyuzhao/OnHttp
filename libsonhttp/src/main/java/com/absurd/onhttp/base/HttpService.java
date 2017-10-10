@@ -1,5 +1,7 @@
 package com.absurd.onhttp.base;
 
+import android.util.Log;
+
 import com.absurd.onhttp.base.base.BaseHttpService;
 
 import java.io.DataOutputStream;
@@ -27,6 +29,9 @@ public class HttpService extends BaseHttpService {
         else post();
         InputStream in = exec();
         if (mListener != null && in != null) {
+            if (mListener instanceof FileServiceListener) {
+                ((FileServiceListener) mListener).setDataSize(Integer.parseInt(mUrlConnection.getHeaderField("Content-Length")));
+            }
             mListener.onSuccess(in);
             mUrlConnection.disconnect();
         }

@@ -1,6 +1,9 @@
 package com.absurd.onhttp.base;
 
+import android.util.Log;
+
 import com.absurd.onhttp.base.base.BaseServiceListener;
+import com.absurd.onhttp.base.base.IDownloadListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,11 +18,17 @@ import java.io.InputStream;
 
 public class FileServiceListener<T> extends BaseServiceListener {
     private File file;
+    private int size;
+    private IDownloadListener downloadListener;
 
-
-    public FileServiceListener(File file, IHttpListener<T> listener) {
+    public FileServiceListener(File file, IHttpListener<T> listener, IDownloadListener downloadListener) {
         this.file = file;
         this.listener = listener;
+        this.downloadListener = downloadListener;
+    }
+
+    public void setDataSize(int size) {
+        this.size = size;
     }
 
     @Override
@@ -27,8 +36,13 @@ public class FileServiceListener<T> extends BaseServiceListener {
         try {
             FileOutputStream fos = new FileOutputStream(file);
             byte[] buffer = new byte[1024];
+            float currentSize = 0;
             int len;
             while ((len = inputStream.read(buffer)) != -1) {
+                currentSize = currentSize + len;
+                if (downloadListener != null) {
+                    downloadListener.onProgress(currentSize / size * 100);
+                }
                 fos.write(buffer, 0, len);
             }
             hander.post(new Runnable() {

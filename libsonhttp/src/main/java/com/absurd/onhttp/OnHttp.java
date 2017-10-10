@@ -14,6 +14,7 @@ import com.absurd.onhttp.base.IServiceListener;
 import com.absurd.onhttp.base.ServiceListener;
 import com.absurd.onhttp.base.ThreadPoolManager;
 import com.absurd.onhttp.base.UpdataServiceListener;
+import com.absurd.onhttp.base.base.IDownloadListener;
 import com.absurd.onhttp.cache.BitmapCache;
 import com.absurd.onhttp.cache.LRUCache;
 import com.absurd.onhttp.util.OnHttpUtil;
@@ -44,6 +45,7 @@ public class OnHttp {
     private int mResId = 0;
     private boolean mIsUpdataFile = false;
     private IHeaderListener mHeaderListener;
+    private IDownloadListener mDownloadListener;
     private Handler handler = new Handler(Looper.getMainLooper());
 
     public static OnHttp getInstance() {
@@ -63,6 +65,11 @@ public class OnHttp {
 
     public OnHttp headers(Map<String, String> header) {
         this.mHeaders = OnHttpUtil.javaBeanToMap(header);
+        return instance;
+    }
+
+    public OnHttp downloadListener(IDownloadListener listener) {
+        this.mDownloadListener = listener;
         return instance;
     }
 
@@ -123,7 +130,7 @@ public class OnHttp {
     public void excute() {
         loadDefault(mResId, mView);
         if (checkParam(mView, mUrl, t, mFile, mIsUpdataFile)) {
-            sendRequest(mView, mUrl, mMethod, mHeaders, mBody, mIsUpdataFile, t, mFile, mHttpListener, mHeaderListener);
+            sendRequest(mView, mUrl, mMethod, mHeaders, mBody, mIsUpdataFile, t, mFile, mHttpListener, mHeaderListener, mDownloadListener);
         }
         clear();
     }
@@ -194,14 +201,14 @@ public class OnHttp {
     }
 
 
-    private <T, M> void sendRequest(ImageView view, String url, int method, Map<String, String> header, Map<String, String> body, boolean isUpdata, Class<T> clazz, File file, IHttpListener<M> httpListener, IHeaderListener headerListener) {
+    private <T, M> void sendRequest(ImageView view, String url, int method, Map<String, String> header, Map<String, String> body, boolean isUpdata, Class<T> clazz, File file, IHttpListener<M> httpListener, IHeaderListener headerListener, IDownloadListener downloadListener) {
         IServiceListener serviceListener;
         if (view != null) {
             serviceListener = new BitmapServiceListener(view, httpListener, url);
         } else if (isUpdata == true && file != null) {
             serviceListener = new ServiceListener(clazz, httpListener);
         } else if (file != null) {
-            serviceListener = new FileServiceListener(file, httpListener);
+            serviceListener = new FileServiceListener(file, httpListener, downloadListener);
         } else {
             serviceListener = new ServiceListener(clazz, httpListener);
         }

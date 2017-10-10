@@ -15,6 +15,7 @@ import com.absurd.demo_onhttp.util.RSAUtil;
 import com.absurd.onhttp.OnHttp;
 import com.absurd.onhttp.base.IHeaderListener;
 import com.absurd.onhttp.base.IHttpListener;
+import com.absurd.onhttp.base.base.IDownloadListener;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -46,11 +47,21 @@ public class MainActivity extends AppCompatActivity {
         //  updata();
         //   vertify();
         //      login();
-        updata(10016,new File("/sdcard/Music/123.png"));
+        //updata(10016,new File("/sdcard/Music/123.png"));
+        download();
     }
 
-
-
+    private void download() {
+        OnHttp.getInstance().url("http://192.168.0.108:6677/uploads/sublime.zip")
+                .file(new File("/sdcard/Music/sublime.zip"))
+                .downloadListener(new IDownloadListener() {
+                    @Override
+                    public void onProgress(float progress) {
+                        Log.v("TAG", progress + "");
+                    }
+                })
+                .excute();
+    }
 
 
     private void updata(int id, File file) {
@@ -58,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         body.put("uid", id + "");
 
         OnHttp.getInstance()
-                .url( API_UPLOAD_PICTURE)
+                .url(API_UPLOAD_PICTURE)
                 .body(Md5Util.mapToBody(body))
                 .file(file)
                 .updata(true)
@@ -67,41 +78,16 @@ public class MainActivity extends AppCompatActivity {
                 .listener(new IHttpListener<String>() {
                     @Override
                     public void onSuccess(String respone) {
-                            Log.v("TAG","----------"+respone);
+                        Log.v("TAG", "----------" + respone);
                     }
 
                     @Override
                     public void onError(int i) {
-                            Log.v("TAG","-----------"+i);
+                        Log.v("TAG", "-----------" + i);
                     }
                 })
                 .excute();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     private void login() {
@@ -188,9 +174,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }).excute();
     }
+
     public final static String APP_HOST_INERFACE = "http://192.168.0.108:6677";
     public final static String API_UPLOAD_PICTURE = APP_HOST_INERFACE + "/index.php/api/attachment/upload";
-
 
 
     private void loadimg() {
