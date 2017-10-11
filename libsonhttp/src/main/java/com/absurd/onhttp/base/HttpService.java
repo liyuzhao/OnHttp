@@ -48,7 +48,7 @@ public class HttpService extends BaseHttpService {
                     if (pos > 0) {
                         tempParams.append("&");
                     }
-                    tempParams.append(String.format("%s=%s", key, mBody.get(key)));
+                    tempParams.append(String.format("%s=%s", key, URLEncoder.encode(mBody.get(key), "utf-8")));
                     pos++;
                 }
                 requestUrl = requestUrl + "?" + tempParams.toString();
