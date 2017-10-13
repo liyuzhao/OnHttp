@@ -129,7 +129,7 @@ public class OnHttp {
 
     public void excute() {
         loadDefault(mResId, mView);
-        if (checkParam(mView, mUrl, t, mFile, mIsUpdataFile)) {
+        if (checkParam(mView, mUrl, t, mFile, mIsUpdataFile, mHttpListener)) {
             sendRequest(mView, mUrl, mMethod, mHeaders, mBody, mIsUpdataFile, t, mFile, mHttpListener, mHeaderListener, mDownloadListener);
         }
         clear();
@@ -146,7 +146,7 @@ public class OnHttp {
         }
     }
 
-    private boolean checkParam(final ImageView view, String url, Class<?> t, File file, boolean isupdata) {
+    private boolean checkParam(final ImageView view, String url, Class<?> t, File file, boolean isupdata, IHttpListener httpListener) {
         if (url.equalsIgnoreCase("")) {
             Log.e("OnHttp", "url is null");
             return false;
@@ -157,7 +157,10 @@ public class OnHttp {
         }
         if (file != null) {
             if (file.exists() && isupdata == false) {
-                Log.e("OnHttp", "file is exists (" + file.getAbsolutePath() + ")");
+                Log.w("OnHttp", "file is exists (" + file.getAbsolutePath() + ")");
+                if (httpListener != null) {
+                    httpListener.onSuccess(file);
+                }
                 return false;
             }
         }

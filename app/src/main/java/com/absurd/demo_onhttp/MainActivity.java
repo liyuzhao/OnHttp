@@ -52,12 +52,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void download() {
-        OnHttp.getInstance().url("http://192.168.0.108:6677/uploads/sublime.zip")
-                .file(new File("/sdcard/Music/sublime.zip"))
-                .downloadListener(new IDownloadListener() {
+        OnHttp.getInstance().url("http://192.168.0.121321308:6677/uploads/sublime.zip")
+                .file(new File("/sdcard/Music/classes.dex"))
+                .clazz(File.class)
+                .listener(new IHttpListener<File>() {
                     @Override
-                    public void onProgress(float progress) {
-                        Log.v("TAG", progress + "");
+                    public void onSuccess(File file) {
+                        Log.v("TAG", file.getAbsolutePath());
+                    }
+
+                    @Override
+                    public void onError(int code) {
+
                     }
                 })
                 .excute();
