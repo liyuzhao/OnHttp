@@ -16,7 +16,7 @@ import java.util.Map;
  * Emile:4884280@qq.com
  */
 
-public class HttpTask implements Runnable {
+class HttpTask implements Runnable {
     private IHttpService httpService;
 
     public HttpTask(String url, int method, Map<String, String> header, Map<String, String> body, boolean isUpdata, File file, IServiceListener listener, IHeaderListener headerListener) {

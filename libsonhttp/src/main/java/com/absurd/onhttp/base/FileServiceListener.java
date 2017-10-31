@@ -55,6 +55,11 @@ public class FileServiceListener<T> extends BaseServiceListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        try {
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

@@ -105,4 +105,9 @@ public class UpdataService extends BaseHttpService {
         }
     }
 
+    @Override
+    public InputStream loadLoacal() {
+        return null;
+    }
+
 }

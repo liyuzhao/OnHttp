@@ -16,6 +16,7 @@ import com.absurd.onhttp.OnHttp;
 import com.absurd.onhttp.base.IHeaderListener;
 import com.absurd.onhttp.base.IHttpListener;
 import com.absurd.onhttp.base.base.IDownloadListener;
+import com.absurd.onhttp.cache.BitmapCache;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -36,38 +37,39 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         imageView = (ImageView) findViewById(R.id.iv_view);
+        BitmapCache.getInstance("/sdcard/Music/");
     }
 
     public void OnClick(View v) {
 
         //   getJSon();
-        //  loadimg();
+        loadimg();
 //        getimg();
 //        getHead();
         //  updata();
         //   vertify();
         //      login();
         //updata(10016,new File("/sdcard/Music/123.png"));
-        download();
+        //  download();
     }
 
-    private void download() {
-        OnHttp.getInstance().url("http://192.168.0.121321308:6677/uploads/sublime.zip")
-                .file(new File("/sdcard/Music/classes.dex"))
-                .clazz(File.class)
-                .listener(new IHttpListener<File>() {
-                    @Override
-                    public void onSuccess(File file) {
-                        Log.v("TAG", file.getAbsolutePath());
-                    }
-
-                    @Override
-                    public void onError(int code) {
-
-                    }
-                })
-                .excute();
-    }
+//    private void download() {
+//        OnHttp.getInstance().url("http://192.168.0.121321308:6677/uploads/sublime.zip")
+//                .file(new File("/sdcard/Music/classes.dex"))
+//                .clazz(File.class)
+//                .listener(new IHttpListener<File>() {
+//                    @Override
+//                    public void onSuccess(File file) {
+//                        Log.v("TAG", file.getAbsolutePath());
+//                    }
+//
+//                    @Override
+//                    public void onError(int code) {
+//
+//                    }
+//                })
+//                .excute();
+//    }
 
 
     private void updata(int id, File file) {

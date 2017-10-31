@@ -6,9 +6,11 @@ import android.graphics.BitmapFactory;
 import com.absurd.onhttp.entity.CacheData;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Author: mr-absurd
@@ -72,6 +74,19 @@ public class BitmapCache {
             e.printStackTrace();
         }
         return bitmap;
+    }
+
+
+    public synchronized InputStream getInputStream(String key) {
+        InputStream stream = null;
+        File bitmapFile = new File(mCacheDir, key);
+        if (!bitmapFile.exists()) return null;
+        try {
+            stream = new FileInputStream(bitmapFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return stream;
     }
 
     private BitmapFactory.Options getBitmapOption(int inSampleSize) {

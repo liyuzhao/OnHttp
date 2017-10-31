@@ -1,8 +1,10 @@
 package com.absurd.onhttp.cache;
 
 import android.graphics.Bitmap;
-import android.util.Log;
-
+import android.graphics.BitmapFactory;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -55,7 +57,15 @@ public class LRUCache {
      * @return value
      **/
     public synchronized Bitmap get(String key) {
-         return map.get(key);
+
+        return map.get(key);
+    }
+
+    public synchronized InputStream getInputStream(String key) {
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        map.get(key).compress(Bitmap.CompressFormat.PNG, 100, baos);
+        return new ByteArrayInputStream(baos.toByteArray());
     }
 
     public synchronized boolean exists(String key) {
@@ -68,7 +78,11 @@ public class LRUCache {
      * @param key value
      **/
     public synchronized void put(String key, Bitmap value) {
-        map.put(key, value);
+         map.put(key, value);
+    }
+
+    public synchronized void put(String key, InputStream value) {
+         map.put(key, BitmapFactory.decodeStream(value));
     }
 
     /**
