@@ -162,8 +162,7 @@ public class OnHttpUtil {
         return map;
     }
 
-
     public static String url2FileName(String url){
-        return  url.replace("/", "_").replace(":", "-").replace(".","_");
+        return url.replace("/", "_").replace(":", "-").replace(".","-");
     }
 }

@@ -3,7 +3,6 @@ package com.absurd.onhttp.base;
 import com.absurd.onhttp.base.base.BaseServiceListener;
 
 
-import java.io.IOException;
 import java.io.InputStream;
 
 
@@ -44,11 +43,6 @@ public class ServiceListener<T> extends BaseServiceListener {
                     listener.onSuccess(finalRespone);
             }
         });
-        try {
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 

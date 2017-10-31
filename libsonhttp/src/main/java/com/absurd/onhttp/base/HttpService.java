@@ -3,9 +3,6 @@ package com.absurd.onhttp.base;
 import android.util.Log;
 
 import com.absurd.onhttp.base.base.BaseHttpService;
-import com.absurd.onhttp.cache.BitmapCache;
-import com.absurd.onhttp.cache.LRUCache;
-import com.absurd.onhttp.util.OnHttpUtil;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -28,34 +25,17 @@ public class HttpService extends BaseHttpService {
 
     @Override
     public void excute() {
-        InputStream stream;
-        stream = loadLoacal();
-        if (stream == null) {
-            if (mMethod == 0) get();
-            else post();
-            stream = exec();
-        }
-        if (mListener != null && stream != null) {
+        if (mMethod == 0) get();
+        else post();
+        InputStream in = exec();
+        if (mListener != null && in != null) {
             if (mListener instanceof FileServiceListener) {
                 ((FileServiceListener) mListener).setDataSize(Integer.parseInt(mUrlConnection.getHeaderField("Content-Length")));
             }
-            mListener.onSuccess(stream);
-            if (mUrlConnection != null) mUrlConnection.disconnect();
+            mListener.onSuccess(in);
+            mUrlConnection.disconnect();
         }
 
-    }
-
-    @Override
-    public InputStream loadLoacal() {
-        InputStream stream = null;
-        String key = OnHttpUtil.url2FileName(String.valueOf(mUrl));
-        if (LRUCache.getInstance().exists(key)) {
-            stream = LRUCache.getInstance().getInputStream(key);
-        } else if (BitmapCache.getInstance().exists(key)) {
-            stream = BitmapCache.getInstance().getInputStream(key);
-            //  LRUCache.getInstance().put(key,stream);
-        }
-        return stream;
     }
 
     private void get() {

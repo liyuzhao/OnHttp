@@ -1,7 +1,6 @@
 package com.absurd.onhttp.base;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.Map;
 
 /**
@@ -26,6 +25,4 @@ public interface IHttpService {
     void setHeaderCallBack(IHeaderListener listener);
 
     void setFile(File file);
-
-    InputStream loadLoacal();
 }

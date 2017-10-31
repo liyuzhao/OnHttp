@@ -16,7 +16,7 @@ import java.util.Map;
  * Data: 2017/9/12.
  */
 
-public abstract class BaseHttpService implements IHttpService {
+public class BaseHttpService implements IHttpService {
     protected IServiceListener mListener;
     protected IHeaderListener mHeaderListener;
     protected URL mUrl;

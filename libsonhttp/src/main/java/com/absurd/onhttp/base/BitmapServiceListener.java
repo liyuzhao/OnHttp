@@ -11,7 +11,6 @@ import com.absurd.onhttp.cache.LRUCache;
 import com.absurd.onhttp.entity.CacheData;
 import com.absurd.onhttp.util.OnHttpUtil;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -36,12 +35,8 @@ public class BitmapServiceListener<T> implements IServiceListener {
     public void onSuccess(InputStream inputStream) {
         final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
         String key = OnHttpUtil.url2FileName(url);
-        if (!LRUCache.getInstance().exists(key)) {
-            LRUCache.getInstance().put(key, bitmap);
-            if (!BitmapCache.getInstance().exists(key)) {
-                BitmapCache.getInstance().put(new CacheData(key, bitmap));
-            }
-        }
+        LRUCache.getInstance().put(key, bitmap);
+        BitmapCache.getInstance().put(new CacheData(key, bitmap));
         hander.post(new Runnable() {
             @Override
             public void run() {
@@ -50,11 +45,6 @@ public class BitmapServiceListener<T> implements IServiceListener {
                     listener.onSuccess((T) bitmap);
             }
         });
-        try {
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
