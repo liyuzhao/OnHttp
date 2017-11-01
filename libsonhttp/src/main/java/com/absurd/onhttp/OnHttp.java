@@ -32,8 +32,7 @@ import java.util.concurrent.FutureTask;
 public class OnHttp {
     public final static int GET = 0;
     public final static int POST = 1;
-    private static OnHttp instance;
-    private Map<String, String> mHeaders;
+     private Map<String, String> mHeaders;
     private Map<String, String> mBody;
     private String mUrl;
     private int mMethod = 1;
@@ -49,82 +48,77 @@ public class OnHttp {
     private Handler handler = new Handler(Looper.getMainLooper());
 
     public static OnHttp getInstance() {
-        if (instance == null) {
-            synchronized (OnHttp.class) {
-                if (instance == null)
-                    instance = new OnHttp();
-            }
-        }
-        return instance;
+
+        return new OnHttp();
     }
 
     public OnHttp url(String url) {
         this.mUrl = url;
-        return instance;
+        return this;
     }
 
     public OnHttp headers(Map<String, String> header) {
         this.mHeaders = OnHttpUtil.javaBeanToMap(header);
-        return instance;
+        return this;
     }
 
     public OnHttp downloadListener(IDownloadListener listener) {
         this.mDownloadListener = listener;
-        return instance;
+        return this;
     }
 
     public OnHttp body(Object body) {
         mBody = OnHttpUtil.javaBeanToMap(body);
-        return instance;
+        return this;
     }
 
     public OnHttp listener(IHttpListener listener) {
         mHttpListener = listener;
-        return instance;
+        return this;
     }
 
     public OnHttp method(int method) {
         mMethod = method;
-        return instance;
+        return this;
     }
 
     public OnHttp cacheHeader(boolean cache) {
         mCacheHeader = cache;
-        return instance;
+        return this;
     }
 
     public OnHttp clazz(Class<?> t) {
         this.t = t;
-        return instance;
+        return this;
     }
 
     public OnHttp view(ImageView view) {
         mView = view;
         method(GET);
         clazz(Bitmap.class);
-        return instance;
+        return this;
     }
 
     public OnHttp updata(boolean isUpdata) {
         mIsUpdataFile = isUpdata;
-        return instance;
+        return this;
     }
 
     public OnHttp id(int resid) {
         mResId = resid;
-        return instance;
+        return this;
     }
 
     public OnHttp file(File file) {
         mFile = file;
         method(GET);
         clazz(File.class);
-        return instance;
+        return this;
     }
 
     public OnHttp headerListener(IHeaderListener listener) {
         mHeaderListener = listener;
-        return instance;
+        return this;
     }
 
     public void excute() {
