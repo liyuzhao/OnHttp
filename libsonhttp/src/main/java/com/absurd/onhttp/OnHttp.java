@@ -17,6 +17,7 @@ import com.absurd.onhttp.base.UpdataServiceListener;
 import com.absurd.onhttp.base.base.IDownloadListener;
 import com.absurd.onhttp.cache.BitmapCache;
 import com.absurd.onhttp.cache.LRUCache;
+import com.absurd.onhttp.imageloader.core.ImageLoader;
 import com.absurd.onhttp.util.OnHttpUtil;
 
 import java.io.File;
@@ -32,7 +33,7 @@ import java.util.concurrent.FutureTask;
 public class OnHttp {
     public final static int GET = 0;
     public final static int POST = 1;
-     private Map<String, String> mHeaders;
+    private Map<String, String> mHeaders;
     private Map<String, String> mBody;
     private String mUrl;
     private int mMethod = 1;
@@ -41,7 +42,7 @@ public class OnHttp {
     private boolean mCacheHeader = false;
     private ImageView mView;
     private File mFile;
-    private int mResId = 0;
+    private Integer mResId = 0;
     private boolean mIsUpdataFile = false;
     private IHeaderListener mHeaderListener;
     private IDownloadListener mDownloadListener;
@@ -123,7 +124,7 @@ public class OnHttp {
 
     public void excute() {
         loadDefault(mResId, mView);
-        if (checkParam(mView, mUrl, t, mFile, mIsUpdataFile, mHttpListener)) {
+        if (checkParam(mView, mUrl, t, mFile, mResId, mIsUpdataFile, mHttpListener)) {
             sendRequest(mView, mUrl, mMethod, mHeaders, mBody, mIsUpdataFile, t, mFile, mHttpListener, mHeaderListener, mDownloadListener);
         }
         clear();
@@ -140,7 +141,7 @@ public class OnHttp {
         }
     }
 
-    private boolean checkParam(final ImageView view, String url, Class<?> t, File file, boolean isupdata, IHttpListener httpListener) {
+    private boolean checkParam(final ImageView view, String url, Class<?> t, File file, Integer resid, boolean isupdata, IHttpListener httpListener) {
         if (url.equalsIgnoreCase("")) {
             Log.e("OnHttp", "url is null");
             return false;
@@ -159,27 +160,32 @@ public class OnHttp {
             }
         }
         if (view != null) {
-            url = OnHttpUtil.url2FileName(url);
-            if (LRUCache.getInstance().exists(url)) {
-                final Bitmap bitmap = LRUCache.getInstance().get(url);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        view.setImageBitmap(bitmap);
-                    }
-                });
-                return false;
-            } else if (BitmapCache.getInstance().exists(url)) {
-                final Bitmap bitmap = BitmapCache.getInstance().get(url);
-                LRUCache.getInstance().put(url, bitmap);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        view.setImageBitmap(bitmap);
-                    }
-                });
-                return false;
+//            url = OnHttpUtil.url2FileName(url);
+//            if (LRUCache.getInstance().exists(url)) {
+//                final Bitmap bitmap = LRUCache.getInstance().get(url);
+//                handler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        view.setImageBitmap(bitmap);
+//                    }
+//                });
+//                return false;
+//            } else if (BitmapCache.getInstance().exists(url)) {
+//                final Bitmap bitmap = BitmapCache.getInstance().get(url);
+//                LRUCache.getInstance().put(url, bitmap);
+//                handler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        view.setImageBitmap(bitmap);
+//                    }
+//                });
+//                return false;
+//            }
+            if (resid != null) {
+                view.setImageResource(resid);
             }
+            ImageLoader.getInstance().displayImage(url, view);
+            return false;
         }
         return true;
     }

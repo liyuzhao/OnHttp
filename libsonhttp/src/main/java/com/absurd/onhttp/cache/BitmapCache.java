@@ -1,9 +1,14 @@
 package com.absurd.onhttp.cache;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.absurd.onhttp.entity.CacheData;
+import com.absurd.onhttp.imageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.absurd.onhttp.imageloader.core.ImageLoader;
+import com.absurd.onhttp.imageloader.core.ImageLoaderConfiguration;
+import com.absurd.onhttp.imageloader.core.assist.QueueProcessingType;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -30,21 +35,29 @@ public class BitmapCache {
         return instance;
     }
 
-    public static BitmapCache getInstance(String path) {
+    public static BitmapCache getInstance(String path, Context context) {
         if (instance == null) {
             synchronized (BitmapCache.class) {
                 if (instance == null)
-                    instance = new BitmapCache(path);
+                    instance = new BitmapCache(path, context);
             }
         }
         return instance;
     }
 
-    public BitmapCache(String path) {
+    public BitmapCache(String path, Context context) {
         mCacheDir = new File(path);
         if (!mCacheDir.exists()) {
             mCacheDir.mkdirs();
         }
+        ImageLoaderConfiguration.Builder config = new ImageLoaderConfiguration.Builder(context);
+        config.threadPriority(Thread.NORM_PRIORITY - 2);
+        config.denyCacheImageMultipleSizesInMemory();
+        config.diskCacheFileNameGenerator(new Md5FileNameGenerator());
+        config.diskCacheSize(50 * 1024 * 1024); // 50 MiB
+        config.tasksProcessingOrder(QueueProcessingType.LIFO);
+        config.writeDebugLogs();
+        ImageLoader.getInstance().init(config.build());
     }
 
 
