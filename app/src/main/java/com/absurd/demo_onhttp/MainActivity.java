@@ -17,6 +17,8 @@ import com.absurd.onhttp.base.IHeaderListener;
 import com.absurd.onhttp.base.IHttpListener;
 import com.absurd.onhttp.base.base.IDownloadListener;
 import com.absurd.onhttp.cache.BitmapCache;
+import com.absurd.onhttp.imageloader.core.DisplayImageOptions;
+import com.absurd.onhttp.imageloader.core.ImageLoader;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -189,9 +191,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadimg() {
 
-        OnHttp.getInstance().url(Constaint.PIC).id(R.mipmap.ic_launcher)
+        OnHttp.getInstance().url(Constaint.PIC)
+                .id(R.mipmap.ic_launcher)
                 .view(imageView)
                 .excute();
+
+//        DisplayImageOptions options = new DisplayImageOptions.Builder()
+//                .showImageOnLoading(R.mipmap.ic_launcher)
+//                .cacheInMemory(true)
+//                .cacheOnDisk(true)
+//                .bitmapConfig(Bitmap.Config.RGB_565)
+//                .build();
+//        ImageLoader.getInstance().displayImage(Constaint.PIC, imageView, options);
 //        OnHttp.getInstance()
 //                .url(Constaint.PIC)
 //                .file(new File("/sdcard/Music/12321.jpg"))
