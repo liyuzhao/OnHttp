@@ -98,11 +98,7 @@ public final class ImageLoaderConfiguration {
 		return new ImageSize(width, height);
 	}
 
-	/**
-	 * Builder for {@link ImageLoaderConfiguration}
-	 *
-	 * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
-	 */
+	
 	public static class Builder {
 
 		private static final String WARNING_OVERLAP_DISK_CACHE_PARAMS = "diskCache(), diskCacheSize() and diskCacheFileCount calls overlap each other";
@@ -111,11 +107,11 @@ public final class ImageLoaderConfiguration {
 		private static final String WARNING_OVERLAP_EXECUTOR = "threadPoolSize(), threadPriority() and tasksProcessingOrder() calls "
 				+ "can overlap taskExecutor() and taskExecutorForCachedImages() calls.";
 
-		/** {@value} */
+		
 		public static final int DEFAULT_THREAD_POOL_SIZE = 3;
-		/** {@value} */
+		
 		public static final int DEFAULT_THREAD_PRIORITY = Thread.NORM_PRIORITY - 2;
-		/** {@value} */
+		
 		public static final QueueProcessingType DEFAULT_TASK_PROCESSING_TYPE = QueueProcessingType.FIFO;
 
 		private Context context;
@@ -153,14 +149,7 @@ public final class ImageLoaderConfiguration {
 			this.context = context.getApplicationContext();
 		}
 
-		/**
-		 * Sets options for memory cache
-		 *
-		 * @param maxImageWidthForMemoryCache  Maximum image width which will be used for memory saving during decoding
-		 *                                     an image to {@link android.graphics.Bitmap Bitmap}. <b>Default value - device's screen width</b>
-		 * @param maxImageHeightForMemoryCache Maximum image height which will be used for memory saving during decoding
-		 *                                     an image to {@link android.graphics.Bitmap Bitmap}. <b>Default value</b> - device's screen height
-		 */
+		
 		public Builder memoryCacheExtraOptions(int maxImageWidthForMemoryCache, int maxImageHeightForMemoryCache) {
 			this.maxImageWidthForMemoryCache = maxImageWidthForMemoryCache;
 			this.maxImageHeightForMemoryCache = maxImageHeightForMemoryCache;
@@ -281,7 +270,7 @@ public final class ImageLoaderConfiguration {
 			return this;
 		}
 
-		/** @deprecated Use {@link #diskCacheSize(int)} instead */
+		
 		@Deprecated
 		public Builder discCacheSize(int maxCacheSize) {
 			return diskCacheSize(maxCacheSize);
@@ -299,7 +288,7 @@ public final class ImageLoaderConfiguration {
 			return this;
 		}
 
-		/** @deprecated Use {@link #diskCacheFileCount(int)} instead */
+		
 		@Deprecated
 		public Builder discCacheFileCount(int maxFileCount) {
 			return diskCacheFileCount(maxFileCount);
@@ -416,13 +405,7 @@ public final class ImageLoaderConfiguration {
 		}
 	}
 
-	/**
-	 * Decorator. Prevents downloads from network (throws {@link IllegalStateException exception}).<br />
-	 * In most cases this downloader shouldn't be used directly.
-	 *
-	 * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
-	 * @since 1.8.0
-	 */
+	
 	private static class NetworkDeniedImageDownloader implements ImageDownloader {
 
 		private final ImageDownloader wrappedDownloader;

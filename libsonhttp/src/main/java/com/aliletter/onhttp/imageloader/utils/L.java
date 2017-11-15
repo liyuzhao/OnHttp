@@ -1,18 +1,4 @@
-/*******************************************************************************
- * Copyright 2011-2014 Sergey Tarasevich
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *******************************************************************************/
+
 package com.aliletter.onhttp.imageloader.utils;
 
 import android.util.Log;
@@ -29,21 +15,13 @@ public final class L {
 	private L() {
 	}
 
-	/**
-	 * Enables logger (if {@link #disableLogging()} was called before)
-	 *
-	 * @deprecated Use {@link #writeLogs(boolean) writeLogs(true)} instead
-	 */
+	
 	@Deprecated
 	public static void enableLogging() {
 		writeLogs(true);
 	}
 
-	/**
-	 * Disables logger, no logs will be passed to LogCat, all log methods will do nothing
-	 *
-	 * @deprecated Use {@link #writeLogs(boolean) writeLogs(false)} instead
-	 */
+	
 	@Deprecated
 	public static void disableLogging() {
 		writeLogs(false);
@@ -54,7 +32,7 @@ public final class L {
 		L.writeDebugLogs = writeDebugLogs;
 	}
 
-	/** Enables/disables logging of {@link ImageLoader} completely (even error logs). */
+	
 	public static void writeLogs(boolean writeLogs) {
 		L.writeLogs = writeLogs;
 	}

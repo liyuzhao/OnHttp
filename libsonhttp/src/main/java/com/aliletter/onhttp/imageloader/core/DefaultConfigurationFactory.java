@@ -1,18 +1,4 @@
-/*******************************************************************************
- * Copyright 2011-2014 Sergey Tarasevich
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *******************************************************************************/
+
 package com.aliletter.onhttp.imageloader.core;
 
 import android.annotation.TargetApi;
@@ -50,15 +36,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * Factory for providing of default options for {@linkplain ImageLoaderConfiguration configuration}
- *
- * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
- * @since 1.5.6
- */
+
 public class DefaultConfigurationFactory {
 
-	/** Creates default implementation of task executor */
+	
 	public static Executor createExecutor(int threadPoolSize, int threadPriority,
                                           QueueProcessingType tasksProcessingType) {
 		boolean lifo = tasksProcessingType == QueueProcessingType.LIFO;
@@ -68,7 +49,7 @@ public class DefaultConfigurationFactory {
 				createThreadFactory(threadPriority, "uil-pool-"));
 	}
 
-	/** Creates default implementation of task distributor */
+	
 	public static Executor createTaskDistributor() {
 		return Executors.newCachedThreadPool(createThreadFactory(Thread.NORM_PRIORITY, "uil-pool-d-"));
 	}
@@ -95,7 +76,7 @@ public class DefaultConfigurationFactory {
 		return new UnlimitedDiskCache(cacheDir, reserveCacheDir, diskCacheFileNameGenerator);
 	}
 
-	/** Creates reserve disk cache folder which will be used if primary disk cache folder becomes unavailable */
+	
 	private static File createReserveDiskCacheDir(Context context) {
 		File cacheDir = StorageUtils.getCacheDirectory(context, false);
 		File individualDir = new File(cacheDir, "uil-images");

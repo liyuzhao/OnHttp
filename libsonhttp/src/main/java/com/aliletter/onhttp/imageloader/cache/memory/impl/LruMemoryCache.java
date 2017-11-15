@@ -16,10 +16,10 @@ public class LruMemoryCache implements MemoryCache {
 	private final LinkedHashMap<String, Bitmap> map;
 
 	private final int maxSize;
-	/** Size of this cache in bytes */
+	
 	private int size;
 
-	/** @param maxSize Maximum sum of the sizes of the Bitmaps in this cache */
+	
 	public LruMemoryCache(int maxSize) {
 		if (maxSize <= 0) {
 			throw new IllegalArgumentException("maxSize <= 0");
@@ -28,22 +28,18 @@ public class LruMemoryCache implements MemoryCache {
 		this.map = new LinkedHashMap<String, Bitmap>(0, 0.75f, true);
 	}
 
-	/**
-	 * Returns the Bitmap for {@code key} if it exists in the cache. If a Bitmap was returned, it is moved to the head
-	 * of the queue. This returns null if a Bitmap is not cached.
-	 */
+	
 	@Override
 	public final Bitmap get(String key) {
 		if (key == null) {
 			throw new NullPointerException("key == null");
 		}
-
 		synchronized (this) {
 			return map.get(key);
 		}
 	}
 
-	/** Caches {@code Bitmap} for {@code key}. The Bitmap is moved to the head of the queue. */
+	
 	@Override
 	public final boolean put(String key, Bitmap value) {
 		if (key == null || value == null) {
@@ -62,11 +58,7 @@ public class LruMemoryCache implements MemoryCache {
 		return true;
 	}
 
-	/**
-	 * Remove the eldest entries until the total of remaining entries is at or below the requested size.
-	 *
-	 * @param maxSize the maximum size of the cache before returning. May be -1 to evict even 0-sized elements.
-	 */
+	
 	private void trimToSize(int maxSize) {
 		while (true) {
 			String key;
@@ -92,7 +84,7 @@ public class LruMemoryCache implements MemoryCache {
 		}
 	}
 
-	/** Removes the entry for {@code key} if it exists. */
+	
 	@Override
 	public final Bitmap remove(String key) {
 		if (key == null) {
@@ -120,11 +112,7 @@ public class LruMemoryCache implements MemoryCache {
 		trimToSize(-1); // -1 will evict 0-sized elements
 	}
 
-	/**
-	 * Returns the size {@code Bitmap} in bytes.
-	 * <p/>
-	 * An entry's size must not change while it is in the cache.
-	 */
+	
 	private int sizeOf(String key, Bitmap value) {
 		return value.getRowBytes() * value.getHeight();
 	}

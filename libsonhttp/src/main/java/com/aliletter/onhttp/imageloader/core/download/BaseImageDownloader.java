@@ -1,18 +1,4 @@
-/*******************************************************************************
- * Copyright 2011-2014 Sergey Tarasevich
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *******************************************************************************/
+
 package com.aliletter.onhttp.imageloader.core.download;
 
 import android.annotation.TargetApi;
@@ -43,22 +29,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
-/**
- * Provides retrieving of {@link InputStream} of image by URI from network or file system or app resources.<br />
- * {@link URLConnection} is used to retrieve image stream from network.
- *
- * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
- * @since 1.8.0
- */
+
 public class BaseImageDownloader implements ImageDownloader {
-	/** {@value} */
+	
 	public static final int DEFAULT_HTTP_CONNECT_TIMEOUT = 5 * 1000; // milliseconds
-	/** {@value} */
+	
 	public static final int DEFAULT_HTTP_READ_TIMEOUT = 20 * 1000; // milliseconds
 
-	/** {@value} */
+	
 	protected static final int BUFFER_SIZE = 32 * 1024; // 32 Kb
-	/** {@value} */
+	
 	protected static final String ALLOWED_URI_CHARS = "@#&=*+-_.,:!?()/~'%";
 
 	protected static final int MAX_REDIRECT_COUNT = 5;
@@ -101,16 +81,7 @@ public class BaseImageDownloader implements ImageDownloader {
 		}
 	}
 
-	/**
-	 * Retrieves {@link InputStream} of image by URI (image is located in the network).
-	 *
-	 * @param imageUri Image URI
-	 * @param extra    Auxiliary object which was passed to {@link DisplayImageOptions.Builder#extraForDownloader(Object)
-	 *                 DisplayImageOptions.extraForDownloader(Object)}; can be null
-	 * @return {@link InputStream} of image
-	 * @throws IOException if some I/O error occurs during network request or if no InputStream could be created for
-	 *                     URL.
-	 */
+	
 	protected InputStream getStreamFromNetwork(String imageUri, Object extra) throws IOException {
 		HttpURLConnection conn = createConnection(imageUri, extra);
 
@@ -136,26 +107,12 @@ public class BaseImageDownloader implements ImageDownloader {
 		return new ContentLengthInputStream(new BufferedInputStream(imageStream, BUFFER_SIZE), conn.getContentLength());
 	}
 
-	/**
-	 * @param conn Opened request connection (response code is available)
-	 * @return <b>true</b> - if data from connection is correct and should be read and processed;
-	 *         <b>false</b> - if response contains irrelevant data and shouldn't be processed
-	 * @throws IOException
-	 */
+	
 	protected boolean shouldBeProcessed(HttpURLConnection conn) throws IOException {
 		return conn.getResponseCode() == 200;
 	}
 
-	/**
-	 * Create {@linkplain HttpURLConnection HTTP connection} for incoming URL
-	 *
-	 * @param url   URL to connect to
-	 * @param extra Auxiliary object which was passed to {@link DisplayImageOptions.Builder#extraForDownloader(Object)
-	 *              DisplayImageOptions.extraForDownloader(Object)}; can be null
-	 * @return {@linkplain HttpURLConnection Connection} for incoming URL. Connection isn't established so it still configurable.
-	 * @throws IOException if some I/O error occurs during network request or if no InputStream could be created for
-	 *                     URL.
-	 */
+	
 	protected HttpURLConnection createConnection(String url, Object extra) throws IOException {
 		String encodedUrl = Uri.encode(url, ALLOWED_URI_CHARS);
 		HttpURLConnection conn = (HttpURLConnection) new URL(encodedUrl).openConnection();
@@ -164,15 +121,7 @@ public class BaseImageDownloader implements ImageDownloader {
 		return conn;
 	}
 
-	/**
-	 * Retrieves {@link InputStream} of image by URI (image is located on the local file system or SD card).
-	 *
-	 * @param imageUri Image URI
-	 * @param extra    Auxiliary object which was passed to {@link DisplayImageOptions.Builder#extraForDownloader(Object)
-	 *                 DisplayImageOptions.extraForDownloader(Object)}; can be null
-	 * @return {@link InputStream} of image
-	 * @throws IOException if some I/O error occurs reading from file system
-	 */
+	
 	protected InputStream getStreamFromFile(String imageUri, Object extra) throws IOException {
 		String filePath = Scheme.FILE.crop(imageUri);
 		if (isVideoFileUri(imageUri)) {
@@ -197,15 +146,7 @@ public class BaseImageDownloader implements ImageDownloader {
 		return null;
 	}
 
-	/**
-	 * Retrieves {@link InputStream} of image by URI (image is accessed using {@link ContentResolver}).
-	 *
-	 * @param imageUri Image URI
-	 * @param extra    Auxiliary object which was passed to {@link DisplayImageOptions.Builder#extraForDownloader(Object)
-	 *                 DisplayImageOptions.extraForDownloader(Object)}; can be null
-	 * @return {@link InputStream} of image
-	 * @throws FileNotFoundException if the provided URI could not be opened
-	 */
+	
 	protected InputStream getStreamFromContent(String imageUri, Object extra) throws FileNotFoundException {
 		ContentResolver res = context.getContentResolver();
 
@@ -236,47 +177,20 @@ public class BaseImageDownloader implements ImageDownloader {
 		}
 	}
 
-	/**
-	 * Retrieves {@link InputStream} of image by URI (image is located in assets of application).
-	 *
-	 * @param imageUri Image URI
-	 * @param extra    Auxiliary object which was passed to {@link DisplayImageOptions.Builder#extraForDownloader(Object)
-	 *                 DisplayImageOptions.extraForDownloader(Object)}; can be null
-	 * @return {@link InputStream} of image
-	 * @throws IOException if some I/O error occurs file reading
-	 */
+	
 	protected InputStream getStreamFromAssets(String imageUri, Object extra) throws IOException {
 		String filePath = Scheme.ASSETS.crop(imageUri);
 		return context.getAssets().open(filePath);
 	}
 
-	/**
-	 * Retrieves {@link InputStream} of image by URI (image is located in drawable resources of application).
-	 *
-	 * @param imageUri Image URI
-	 * @param extra    Auxiliary object which was passed to {@link DisplayImageOptions.Builder#extraForDownloader(Object)
-	 *                 DisplayImageOptions.extraForDownloader(Object)}; can be null
-	 * @return {@link InputStream} of image
-	 */
+	
 	protected InputStream getStreamFromDrawable(String imageUri, Object extra) {
 		String drawableIdString = Scheme.DRAWABLE.crop(imageUri);
 		int drawableId = Integer.parseInt(drawableIdString);
 		return context.getResources().openRawResource(drawableId);
 	}
 
-	/**
-	 * Retrieves {@link InputStream} of image by URI from other source with unsupported scheme. Should be overriden by
-	 * successors to implement image downloading from special sources.<br />
-	 * This method is called only if image URI has unsupported scheme. Throws {@link UnsupportedOperationException} by
-	 * default.
-	 *
-	 * @param imageUri Image URI
-	 * @param extra    Auxiliary object which was passed to {@link DisplayImageOptions.Builder#extraForDownloader(Object)
-	 *                 DisplayImageOptions.extraForDownloader(Object)}; can be null
-	 * @return {@link InputStream} of image
-	 * @throws IOException                   if some I/O error occurs
-	 * @throws UnsupportedOperationException if image URI has unsupported scheme(protocol)
-	 */
+	
 	protected InputStream getStreamFromOtherSource(String imageUri, Object extra) throws IOException {
 		throw new UnsupportedOperationException(String.format(ERROR_UNSUPPORTED_SCHEME, imageUri));
 	}

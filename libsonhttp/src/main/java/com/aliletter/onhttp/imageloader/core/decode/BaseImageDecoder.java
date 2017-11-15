@@ -1,18 +1,4 @@
-/*******************************************************************************
- * Copyright 2011-2014 Sergey Tarasevich
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *******************************************************************************/
+
 package com.aliletter.onhttp.imageloader.core.decode;
 
 import android.graphics.Bitmap;
@@ -31,13 +17,7 @@ import com.aliletter.onhttp.imageloader.utils.L;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Decodes images to {@link Bitmap}, scales them to needed size
- *
- * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
- * @see ImageDecodingInfo
- * @since 1.8.3
- */
+
 public class BaseImageDecoder implements ImageDecoder {
 
 	protected static final String LOG_SUBSAMPLE_IMAGE = "Subsample original image (%1$s) to %2$s (scale = %3$d) [%4$s]";
@@ -49,24 +29,12 @@ public class BaseImageDecoder implements ImageDecoder {
 
 	protected final boolean loggingEnabled;
 
-	/**
-	 * @param loggingEnabled Whether debug logs will be written to LogCat. Usually should match {@link
-	 *                       com.aliletter.onhttp.core.ImageLoaderConfiguration.Builder#writeDebugLogs()
-	 *                       ImageLoaderConfiguration.writeDebugLogs()}
-	 */
+	
 	public BaseImageDecoder(boolean loggingEnabled) {
 		this.loggingEnabled = loggingEnabled;
 	}
 
-	/**
-	 * Decodes image from URI into {@link Bitmap}. Image is scaled close to incoming {@linkplain ImageSize target size}
-	 * during decoding (depend on incoming parameters).
-	 *
-	 * @param decodingInfo Needed data for decoding image
-	 * @return Decoded bitmap
-	 * @throws IOException                   if some I/O exception occurs during image reading
-	 * @throws UnsupportedOperationException if image URI has unsupported scheme(protocol)
-	 */
+	
 	@Override
 	public Bitmap decode(ImageDecodingInfo decodingInfo) throws IOException {
 		Bitmap decodedBitmap;

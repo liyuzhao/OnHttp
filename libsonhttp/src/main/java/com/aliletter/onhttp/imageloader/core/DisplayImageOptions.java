@@ -146,11 +146,7 @@ public final class DisplayImageOptions {
 		return isSyncLoading;
 	}
 
-	/**
-	 * Builder for {@link DisplayImageOptions}
-	 *
-	 * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
-	 */
+	
 	public static class Builder {
 		private int imageResOnLoading = 0;
 		private int imageResForEmptyUri = 0;
@@ -227,102 +223,76 @@ public final class DisplayImageOptions {
 			return this;
 		}
 
-		/**
-		 * Loaded image will be cached in memory
-		 *
-		 * @deprecated Use {@link #cacheInMemory(boolean) cacheInMemory(true)} instead
-		 */
+		
 		@Deprecated
 		public Builder cacheInMemory() {
 			cacheInMemory = true;
 			return this;
 		}
 
-		/** Sets whether loaded image will be cached in memory */
+		
 		public Builder cacheInMemory(boolean cacheInMemory) {
 			this.cacheInMemory = cacheInMemory;
 			return this;
 		}
 
-		/**
-		 * Loaded image will be cached on disk
-		 *
-		 * @deprecated Use {@link #cacheOnDisk(boolean) cacheOnDisk(true)} instead
-		 */
+		
 		@Deprecated
 		public Builder cacheOnDisc() {
 			return cacheOnDisk(true);
 		}
 
-		/**
-		 * Sets whether loaded image will be cached on disk
-		 *
-		 * @deprecated Use {@link #cacheOnDisk(boolean)} instead
-		 */
+		
 		@Deprecated
 		public Builder cacheOnDisc(boolean cacheOnDisk) {
 			return cacheOnDisk(cacheOnDisk);
 		}
 
-		/** Sets whether loaded image will be cached on disk */
+		
 		public Builder cacheOnDisk(boolean cacheOnDisk) {
 			this.cacheOnDisk = cacheOnDisk;
 			return this;
 		}
 
-		/**
-		 * Sets {@linkplain ImageScaleType scale type} for decoding image. This parameter is used while define scale
-		 * size for decoding image to Bitmap. Default value - {@link ImageScaleType#IN_SAMPLE_POWER_OF_2}
-		 */
+		
 		public Builder imageScaleType(ImageScaleType imageScaleType) {
 			this.imageScaleType = imageScaleType;
 			return this;
 		}
 
-		/** Sets {@link Bitmap.Config bitmap config} for image decoding. Default value - {@link Bitmap.Config#ARGB_8888} */
+		
 		public Builder bitmapConfig(Bitmap.Config bitmapConfig) {
 			if (bitmapConfig == null) throw new IllegalArgumentException("bitmapConfig can't be null");
 			decodingOptions.inPreferredConfig = bitmapConfig;
 			return this;
 		}
 
-		/**
-		 * Sets options for image decoding.<br />
-		 * <b>NOTE:</b> {@link Options#inSampleSize} of incoming options will <b>NOT</b> be considered. Library
-		 * calculate the most appropriate sample size itself according yo {@link #imageScaleType(ImageScaleType)}
-		 * options.<br />
-		 * <b>NOTE:</b> This option overlaps {@link #bitmapConfig(android.graphics.Bitmap.Config) bitmapConfig()}
-		 * option.
-		 */
+		
 		public Builder decodingOptions(Options decodingOptions) {
 			if (decodingOptions == null) throw new IllegalArgumentException("decodingOptions can't be null");
 			this.decodingOptions = decodingOptions;
 			return this;
 		}
 
-		/** Sets delay time before starting loading task. Default - no delay. */
+		
 		public Builder delayBeforeLoading(int delayInMillis) {
 			this.delayBeforeLoading = delayInMillis;
 			return this;
 		}
 
-		/** Sets auxiliary object which will be passed to {@link ImageDownloader#getStream(String, Object)} */
+		
 		public Builder extraForDownloader(Object extra) {
 			this.extraForDownloader = extra;
 			return this;
 		}
 
-		/** Sets whether ImageLoader will consider EXIF parameters of JPEG image (rotate, flip) */
+		
 		public Builder considerExifParams(boolean considerExifParams) {
 			this.considerExifParams = considerExifParams;
 			return this;
 		}
 
-		/**
-		 * Sets bitmap processor which will be process bitmaps before they will be cached in memory. So memory cache
-		 * will contain bitmap processed by incoming preProcessor.<br />
-		 * Image will be pre-processed even if caching in memory is disabled.
-		 */
+		
 		public Builder preProcessor(BitmapProcessor preProcessor) {
 			this.preProcessor = preProcessor;
 			return this;
@@ -334,10 +304,7 @@ public final class DisplayImageOptions {
 			return this;
 		}
 
-		/**
-		 * Sets custom {@link BitmapDisplayer displayer} for image loading task. Default value -
-		 * {@link DefaultConfigurationFactory#createBitmapDisplayer()}
-		 */
+		
 		public Builder displayer(BitmapDisplayer displayer) {
 			if (displayer == null) throw new IllegalArgumentException("displayer can't be null");
 			this.displayer = displayer;
@@ -349,16 +316,13 @@ public final class DisplayImageOptions {
 			return this;
 		}
 
-		/**
-		 * Sets custom {@linkplain Handler handler} for displaying images and firing {@linkplain ImageLoadingListener
-		 * listener} events.
-		 */
+		
 		public Builder handler(Handler handler) {
 			this.handler = handler;
 			return this;
 		}
 
-		/** Sets all options equal to incoming options */
+		
 		public Builder cloneFrom(DisplayImageOptions options) {
 			imageResOnLoading = options.imageResOnLoading;
 			imageResForEmptyUri = options.imageResForEmptyUri;
@@ -382,25 +346,13 @@ public final class DisplayImageOptions {
 			return this;
 		}
 
-		/** Builds configured {@link DisplayImageOptions} object */
+		
 		public DisplayImageOptions build() {
 			return new DisplayImageOptions(this);
 		}
 	}
 
-	/**
-	 * Creates options appropriate for single displaying:
-	 * <ul>
-	 * <li>View will <b>not</b> be reset before loading</li>
-	 * <li>Loaded image will <b>not</b> be cached in memory</li>
-	 * <li>Loaded image will <b>not</b> be cached on disk</li>
-	 * <li>{@link ImageScaleType#IN_SAMPLE_POWER_OF_2} decoding type will be used</li>
-	 * <li>{@link Bitmap.Config#ARGB_8888} bitmap config will be used for image decoding</li>
-	 * <li>{@link SimpleBitmapDisplayer} will be used for image displaying</li>
-	 * </ul>
-	 * <p/>
-	 * These option are appropriate for simple single-use image (from drawables or from Internet) displaying.
-	 */
+	
 	public static DisplayImageOptions createSimple() {
 		return new Builder().build();
 	}

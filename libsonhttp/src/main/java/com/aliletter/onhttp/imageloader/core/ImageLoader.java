@@ -1,18 +1,4 @@
-/*******************************************************************************
- * Copyright 2011-2014 Sergey Tarasevich
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *******************************************************************************/
+
 package com.aliletter.onhttp.imageloader.core;
 
 import android.graphics.Bitmap;
@@ -39,13 +25,7 @@ import com.aliletter.onhttp.imageloader.utils.ImageSizeUtils;
 import com.aliletter.onhttp.imageloader.utils.L;
 import com.aliletter.onhttp.imageloader.utils.MemoryCacheUtils;
 
-/**
- * Singletone for image loading and displaying at {@link ImageView ImageViews}<br />
- * <b>NOTE:</b> {@link #init(ImageLoaderConfiguration)} method must be called before any other method.
- *
- * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
- * @since 1.0.0
- */
+
 public class ImageLoader {
 
     public static final String TAG = ImageLoader.class.getSimpleName();
@@ -66,9 +46,7 @@ public class ImageLoader {
 
     private volatile static ImageLoader instance;
 
-    /**
-     * Returns singleton class instance
-     */
+    
     public static ImageLoader getInstance() {
         if (instance == null) {
             synchronized (ImageLoader.class) {
@@ -83,14 +61,7 @@ public class ImageLoader {
     protected ImageLoader() {
     }
 
-    /**
-     * Initializes ImageLoader instance with configuration.<br />
-     * If configurations was set before ( {@link #isInited()} == true) then this method does nothing.<br />
-     * To force initialization with new configuration you should {@linkplain #destroy() destroy ImageLoader} at first.
-     *
-     * @param configuration {@linkplain ImageLoaderConfiguration ImageLoader configuration}
-     * @throws IllegalArgumentException if <b>configuration</b> parameter is null
-     */
+    
     public synchronized void init(ImageLoaderConfiguration configuration) {
         if (configuration == null) {
             throw new IllegalArgumentException(ERROR_INIT_CONFIG_WITH_NULL);
@@ -104,10 +75,7 @@ public class ImageLoader {
         }
     }
 
-    /**
-     * Returns <b>true</b> - if ImageLoader {@linkplain #init(ImageLoaderConfiguration) is initialized with
-     * configuration}; <b>false</b> - otherwise
-     */
+    
     public boolean isInited() {
         return configuration != null;
     }
@@ -208,32 +176,12 @@ public class ImageLoader {
         }
     }
 
-    /**
-     * Adds display image task to execution pool. Image will be set to ImageView when it's turn. <br/>
-     * Default {@linkplain DisplayImageOptions display image options} from {@linkplain ImageLoaderConfiguration
-     * configuration} will be used.<br />
-     * <b>NOTE:</b> {@link #init(ImageLoaderConfiguration)} method must be called before this method call
-     *
-     * @param uri       Image URI (i.e. "http://site.com/image.png", "file:///mnt/sdcard/image.png")
-     * @param imageView {@link ImageView} which should display image
-     * @throws IllegalStateException    if {@link #init(ImageLoaderConfiguration)} method wasn't called before
-     * @throws IllegalArgumentException if passed <b>imageView</b> is null
-     */
+    
     public void displayImage(String uri, ImageView imageView) {
         displayImage(uri, new ImageViewAware(imageView), null, null, null);
     }
 
-    /**
-     * Adds display image task to execution pool. Image will be set to ImageView when it's turn. <br/>
-     * Default {@linkplain DisplayImageOptions display image options} from {@linkplain ImageLoaderConfiguration
-     * configuration} will be used.<br />
-     * <b>NOTE:</b> {@link #init(ImageLoaderConfiguration)} method must be called before this method call
-     *
-     * @param uri       Image URI (i.e. "http://site.com/image.png", "file:///mnt/sdcard/image.png")
-     * @param imageView {@link ImageView} which should display image
-     * @throws IllegalStateException    if {@link #init(ImageLoaderConfiguration)} method wasn't called before
-     * @throws IllegalArgumentException if passed <b>imageView</b> is null
-     */
+    
     public void displayImage(String uri, ImageView imageView, ImageSize targetImageSize) {
         displayImage(uri, new ImageViewAware(imageView), null, targetImageSize, null, null);
     }
@@ -259,17 +207,7 @@ public class ImageLoader {
         displayImage(uri, new ImageViewAware(imageView), options, listener, progressListener);
     }
 
-    /**
-     * Adds load image task to execution pool. Image will be returned with
-     * {@link ImageLoadingListener#onLoadingComplete(String, android.view.View, android.graphics.Bitmap)} callback}.
-     * <br />
-     * <b>NOTE:</b> {@link #init(ImageLoaderConfiguration)} method must be called before this method call
-     *
-     * @param uri      Image URI (i.e. "http://site.com/image.png", "file:///mnt/sdcard/image.png")
-     * @param listener {@linkplain ImageLoadingListener Listener} for image loading process. Listener fires events on UI
-     *                 thread if this method is called on UI thread.
-     * @throws IllegalStateException if {@link #init(ImageLoaderConfiguration)} method wasn't called before
-     */
+    
     public void loadImage(String uri, ImageLoadingListener listener) {
         loadImage(uri, null, null, listener, null);
     }
@@ -342,63 +280,37 @@ public class ImageLoader {
         defaultListener = listener == null ? new SimpleImageLoadingListener() : listener;
     }
 
-    /**
-     * Returns memory cache
-     *
-     * @throws IllegalStateException if {@link #init(ImageLoaderConfiguration)} method wasn't called before
-     */
+    
     public MemoryCache getMemoryCache() {
         checkConfiguration();
         return configuration.memoryCache;
     }
 
-    /**
-     * Clears memory cache
-     *
-     * @throws IllegalStateException if {@link #init(ImageLoaderConfiguration)} method wasn't called before
-     */
+    
     public void clearMemoryCache() {
         checkConfiguration();
         configuration.memoryCache.clear();
     }
 
-    /**
-     * Returns disk cache
-     *
-     * @throws IllegalStateException if {@link #init(ImageLoaderConfiguration)} method wasn't called before
-     * @deprecated Use {@link #getDiskCache()} instead
-     */
+    
     @Deprecated
     public DiskCache getDiscCache() {
         return getDiskCache();
     }
 
-    /**
-     * Returns disk cache
-     *
-     * @throws IllegalStateException if {@link #init(ImageLoaderConfiguration)} method wasn't called before
-     */
+    
     public DiskCache getDiskCache() {
         checkConfiguration();
         return configuration.diskCache;
     }
 
-    /**
-     * Clears disk cache.
-     *
-     * @throws IllegalStateException if {@link #init(ImageLoaderConfiguration)} method wasn't called before
-     * @deprecated Use {@link #clearDiskCache()} instead
-     */
+    
     @Deprecated
     public void clearDiscCache() {
         clearDiskCache();
     }
 
-    /**
-     * Clears disk cache.
-     *
-     * @throws IllegalStateException if {@link #init(ImageLoaderConfiguration)} method wasn't called before
-     */
+    
     public void clearDiskCache() {
         checkConfiguration();
         configuration.diskCache.clear();
@@ -423,43 +335,22 @@ public class ImageLoader {
         engine.cancelDisplayTaskFor(new ImageViewAware(imageView));
     }
 
-    /**
-     * Denies or allows ImageLoader to download images from the network.<br />
-     * <br />
-     * If downloads are denied and if image isn't cached then
-     * {@link ImageLoadingListener#onLoadingFailed(String, View, FailReason)} callback will be fired with
-     * {@link FailReason.FailType#NETWORK_DENIED}
-     *
-     * @param denyNetworkDownloads pass <b>true</b> - to deny engine to download images from the network; <b>false</b> -
-     *                             to allow engine to download images from network.
-     */
+    
     public void denyNetworkDownloads(boolean denyNetworkDownloads) {
         engine.denyNetworkDownloads(denyNetworkDownloads);
     }
 
-    /**
-     * Sets option whether ImageLoader will use {@link FlushedInputStream} for network downloads to handle <a
-     * href="http://code.google.com/p/android/issues/detail?id=6066">this known problem</a> or not.
-     *
-     * @param handleSlowNetwork pass <b>true</b> - to use {@link FlushedInputStream} for network downloads; <b>false</b>
-     *                          - otherwise.
-     */
+    
     public void handleSlowNetwork(boolean handleSlowNetwork) {
         engine.handleSlowNetwork(handleSlowNetwork);
     }
 
-    /**
-     * Pause ImageLoader. All new "load&display" tasks won't be executed until ImageLoader is {@link #resume() resumed}.
-     * <br />
-     * Already running tasks are not paused.
-     */
+    
     public void pause() {
         engine.pause();
     }
 
-    /**
-     * Resumes waiting "load&display" tasks
-     */
+    
     public void resume() {
         engine.resume();
     }
@@ -469,11 +360,7 @@ public class ImageLoader {
         engine.stop();
     }
 
-    /**
-     * {@linkplain #stop() Stops ImageLoader} and clears current configuration. <br />
-     * You can {@linkplain #init(ImageLoaderConfiguration) init} ImageLoader with new configuration after calling this
-     * method.
-     */
+    
     public void destroy() {
         if (configuration != null) L.d(LOG_DESTROY);
         stop();
@@ -492,12 +379,7 @@ public class ImageLoader {
         return handler;
     }
 
-    /**
-     * Listener which is designed for synchronous image loading.
-     *
-     * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
-     * @since 1.9.0
-     */
+    
     private static class SyncImageLoadingListener extends SimpleImageLoadingListener {
 
         private Bitmap loadedImage;

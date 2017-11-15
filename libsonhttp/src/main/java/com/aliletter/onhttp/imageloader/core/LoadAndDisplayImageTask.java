@@ -154,7 +154,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 		runTask(displayBitmapTask, syncLoading, handler, engine);
 	}
 
-	/** @return <b>true</b> - if task should be interrupted; <b>false</b> - otherwise */
+	
 	private boolean waitIfPaused() {
 		AtomicBoolean pause = engine.getPause();
 		if (pause.get()) {
@@ -174,7 +174,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 		return isTaskNotActual();
 	}
 
-	/** @return <b>true</b> - if task should be interrupted; <b>false</b> - otherwise */
+	
 	private boolean delayIfNeed() {
 		if (options.shouldDelayBeforeLoading()) {
 			L.d(LOG_DELAY_BEFORE_LOADING, options.getDelayBeforeLoading(), memoryCacheKey);
@@ -243,7 +243,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 		return decoder.decode(decodingInfo);
 	}
 
-	/** @return <b>true</b> - if image was downloaded successfully; <b>false</b> - otherwise */
+	
 	private boolean tryCacheImageOnDisk() throws TaskCancelledException {
 		L.d(LOG_CACHE_IMAGE_ON_DISK, memoryCacheKey);
 
@@ -279,7 +279,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 		}
 	}
 
-	/** Decodes image file into Bitmap, resize it and save it back */
+	
 	private boolean resizeAndSaveImage(int maxWidth, int maxHeight) throws IOException {
 		// Decode image file, compress and re-save it
 		boolean saved = false;
@@ -312,7 +312,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 		return syncLoading || fireProgressEvent(current, total);
 	}
 
-	/** @return <b>true</b> - if loading should be continued; <b>false</b> - if loading should be interrupted */
+	
 	private boolean fireProgressEvent(final int current, final int total) {
 		if (isTaskInterrupted() || isTaskNotActual()) return false;
 		if (progressListener != null) {
@@ -364,32 +364,25 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 		return d;
 	}
 
-	/**
-	 * @throws TaskCancelledException if task is not actual (target ImageAware is collected by GC or the image URI of
-	 *                                this task doesn't match to image URI which is actual for current ImageAware at
-	 *                                this moment)
-	 */
+	
 	private void checkTaskNotActual() throws TaskCancelledException {
 		checkViewCollected();
 		checkViewReused();
 	}
 
-	/**
-	 * @return <b>true</b> - if task is not actual (target ImageAware is collected by GC or the image URI of this task
-	 * doesn't match to image URI which is actual for current ImageAware at this moment)); <b>false</b> - otherwise
-	 */
+	
 	private boolean isTaskNotActual() {
 		return isViewCollected() || isViewReused();
 	}
 
-	/** @throws TaskCancelledException if target ImageAware is collected */
+	
 	private void checkViewCollected() throws TaskCancelledException {
 		if (isViewCollected()) {
 			throw new TaskCancelledException();
 		}
 	}
 
-	/** @return <b>true</b> - if target ImageAware is collected by GC; <b>false</b> - otherwise */
+	
 	private boolean isViewCollected() {
 		if (imageAware.isCollected()) {
 			L.d(LOG_TASK_CANCELLED_IMAGEAWARE_COLLECTED, memoryCacheKey);
@@ -398,14 +391,14 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 		return false;
 	}
 
-	/** @throws TaskCancelledException if target ImageAware is collected by GC */
+	
 	private void checkViewReused() throws TaskCancelledException {
 		if (isViewReused()) {
 			throw new TaskCancelledException();
 		}
 	}
 
-	/** @return <b>true</b> - if current ImageAware is reused for displaying another image; <b>false</b> - otherwise */
+	
 	private boolean isViewReused() {
 		String currentCacheKey = engine.getLoadingUriForView(imageAware);
 		// Check whether memory cache key (image URI) for current ImageAware is actual.
@@ -418,14 +411,14 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 		return false;
 	}
 
-	/** @throws TaskCancelledException if current task was interrupted */
+	
 	private void checkTaskInterrupted() throws TaskCancelledException {
 		if (isTaskInterrupted()) {
 			throw new TaskCancelledException();
 		}
 	}
 
-	/** @return <b>true</b> - if current task was interrupted; <b>false</b> - otherwise */
+	
 	private boolean isTaskInterrupted() {
 		if (Thread.interrupted()) {
 			L.d(LOG_TASK_INTERRUPTED, memoryCacheKey);
@@ -448,13 +441,7 @@ final class LoadAndDisplayImageTask implements Runnable, IoUtils.CopyListener {
 		}
 	}
 
-	/**
-	 * Exceptions for case when task is cancelled (thread is interrupted, image view is reused for another task, view is
-	 * collected by GC).
-	 *
-	 * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
-	 * @since 1.9.1
-	 */
+	
 	class TaskCancelledException extends Exception {
 	}
 }

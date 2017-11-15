@@ -41,7 +41,7 @@ class ImageLoaderEngine {
 		taskDistributor = DefaultConfigurationFactory.createTaskDistributor();
 	}
 
-	/** Submits task to execution pool */
+	
 	void submit(final LoadAndDisplayImageTask task) {
 		taskDistributor.execute(new Runnable() {
 			@Override
@@ -58,7 +58,7 @@ class ImageLoaderEngine {
 		});
 	}
 
-	/** Submits task to execution pool */
+	
 	void submit(ProcessAndDisplayImageTask task) {
 		initExecutorsIfNeed();
 		taskExecutorForCachedImages.execute(task);
@@ -85,10 +85,7 @@ class ImageLoaderEngine {
 		return cacheKeysForImageAwares.get(imageAware.getId());
 	}
 
-	/**
-	 * Associates <b>memoryCacheKey</b> with <b>imageAware</b>. Then it helps to define image URI is loaded into View at
-	 * exact moment.
-	 */
+	
 	void prepareDisplayTaskFor(ImageAware imageAware, String memoryCacheKey) {
 		cacheKeysForImageAwares.put(imageAware.getId(), memoryCacheKey);
 	}
@@ -114,7 +111,7 @@ class ImageLoaderEngine {
 		paused.set(true);
 	}
 
-	/** Resumes engine work. Paused "load&display" tasks will continue its work. */
+	
 	void resume() {
 		paused.set(false);
 		synchronized (pauseLock) {

@@ -1,18 +1,4 @@
-/*******************************************************************************
- * Copyright 2013-2014 Sergey Tarasevich
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *******************************************************************************/
+
 package com.aliletter.onhttp.imageloader.core.decode;
 
 import android.annotation.TargetApi;
@@ -91,53 +77,47 @@ public class ImageDecodingInfo {
 		return imageKey;
 	}
 
-	/** @return Image URI for decoding (usually image from disk cache) */
+	
 	public String getImageUri() {
 		return imageUri;
 	}
 
-	/** @return The original image URI which was passed to ImageLoader */
+	
 	public String getOriginalImageUri() {
 		return originalImageUri;
 	}
 
-	/**
-	 * @return Target size for image. Decoded bitmap should close to this size according to {@linkplain ImageScaleType
-	 * image scale type} and {@linkplain ViewScaleType view scale type}.
-	 */
+	
 	public ImageSize getTargetSize() {
 		return targetSize;
 	}
 
-	/**
-	 * @return {@linkplain ImageScaleType Scale type for image sampling and scaling}. This parameter affects result size
-	 * of decoded bitmap.
-	 */
+	
 	public ImageScaleType getImageScaleType() {
 		return imageScaleType;
 	}
 
-	/** @return {@linkplain ViewScaleType View scale type}. This parameter affects result size of decoded bitmap. */
+	
 	public ViewScaleType getViewScaleType() {
 		return viewScaleType;
 	}
 
-	/** @return Downloader for image loading */
+	
 	public ImageDownloader getDownloader() {
 		return downloader;
 	}
 
-	/** @return Auxiliary object for downloader */
+	
 	public Object getExtraForDownloader() {
 		return extraForDownloader;
 	}
 
-	/** @return <b>true</b> - if EXIF params of image should be considered; <b>false</b> - otherwise */
+	
 	public boolean shouldConsiderExifParams() {
 		return considerExifParams;
 	}
 
-	/** @return Decoding options */
+	
 	public Options getDecodingOptions() {
 		return decodingOptions;
 	}

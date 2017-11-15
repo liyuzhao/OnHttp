@@ -1,18 +1,4 @@
-/*******************************************************************************
- * Copyright 2011-2014 Sergey Tarasevich
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *******************************************************************************/
+
 package com.aliletter.onhttp.imageloader.cache.disc.impl;
 
 import android.graphics.Bitmap;
@@ -31,11 +17,11 @@ import java.io.OutputStream;
 
 
 public abstract class BaseDiskCache implements DiskCache {
-	/** {@value */
+	
 	public static final int DEFAULT_BUFFER_SIZE = 32 * 1024; // 32 Kb
-	/** {@value */
+	
 	public static final Bitmap.CompressFormat DEFAULT_COMPRESS_FORMAT = Bitmap.CompressFormat.PNG;
-	/** {@value */
+	
 	public static final int DEFAULT_COMPRESS_QUALITY = 100;
 
 	private static final String ERROR_ARG_NULL = " argument must be not null";
@@ -147,7 +133,7 @@ public abstract class BaseDiskCache implements DiskCache {
 		}
 	}
 
-	/** Returns file object (not null) for incoming image URI. File object can reference to non-existing file. */
+	
 	protected File getFile(String imageUri) {
 		String fileName = fileNameGenerator.generate(imageUri);
 		File dir = cacheDir;

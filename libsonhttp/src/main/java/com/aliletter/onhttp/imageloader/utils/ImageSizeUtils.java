@@ -92,15 +92,7 @@ public final class ImageSizeUtils {
 		return scale;
 	}
 
-	/**
-	 * Computes minimal sample size for downscaling image so result image size won't exceed max acceptable OpenGL
-	 * texture size.<br />
-	 * We can't create Bitmap in memory with size exceed max texture size (usually this is 2048x2048) so this method
-	 * calculate minimal sample size which should be applied to image to fit into these limits.
-	 *
-	 * @param srcSize Original image size
-	 * @return Minimal sample size
-	 */
+	
 	public static int computeMinImageSampleSize(ImageSize srcSize) {
 		final int srcWidth = srcSize.getWidth();
 		final int srcHeight = srcSize.getHeight();
@@ -113,28 +105,7 @@ public final class ImageSizeUtils {
 		return Math.max(widthScale, heightScale); // max
 	}
 
-	/**
-	 * Computes scale of target size (<b>targetSize</b>) to source size (<b>srcSize</b>).<br />
-	 * <br />
-	 * <b>Examples:</b><br />
-	 * <p/>
-	 * <pre>
-	 * srcSize(40x40), targetSize(10x10) -> scale = 0.25
-	 *
-	 * srcSize(10x10), targetSize(20x20), stretch = false -> scale = 1
-	 * srcSize(10x10), targetSize(20x20), stretch = true  -> scale = 2
-	 *
-	 * srcSize(100x100), targetSize(20x40), viewScaleType = FIT_INSIDE -> scale = 0.2
-	 * srcSize(100x100), targetSize(20x40), viewScaleType = CROP       -> scale = 0.4
-	 * </pre>
-	 *
-	 * @param srcSize       Source (image) size
-	 * @param targetSize    Target (view) size
-	 * @param viewScaleType {@linkplain ViewScaleType Scale type} for placing image in view
-	 * @param stretch       Whether source size should be stretched if target size is larger than source size. If <b>false</b>
-	 *                      then result scale value can't be greater than 1.
-	 * @return Computed scale
-	 */
+	
 	public static float computeImageScale(ImageSize srcSize, ImageSize targetSize, ViewScaleType viewScaleType,
 			boolean stretch) {
 		final int srcWidth = srcSize.getWidth();
