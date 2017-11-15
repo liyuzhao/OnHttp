@@ -8,11 +8,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="OnClick"
+        android:onClick="onClick"
         android:text="OnClick"
         android:textSize="40dp" />
 
     <ImageView
+        android:background="@mipmap/ic_launcher"
         android:id="@+id/iv_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

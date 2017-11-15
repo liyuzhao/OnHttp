@@ -1,54 +1,55 @@
-package com.aliletter.onhttp.base;
+package com.aliletter.onhttp.uploader;
 
-import com.aliletter.onhttp.base.base.BaseHttpService;
+import com.aliletter.onhttp.util.OnHttpUtil;
 
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Map;
 import java.util.UUID;
 
 /**
  * Author: aliletter
  * Github: http://github.com/aliletter
- * Data: 2017/9/11.
+ * Data: 2017/11/15.
  */
 
-public class UpdataService extends BaseHttpService {
+public class UpService extends BaseUpservice implements IUpService {
     private static final String BOUNDARY = UUID.randomUUID().toString();
     private static final String PREFIX = "--";
     private static final String LINE_END = "\r\n";
     private static final String CONTENT_TYPE = "multipart/form-data";
 
     @Override
-    public void excute() {
+    protected void RequstNetWork() {
         try {
-            mUrlConnection = (HttpURLConnection) mUrl.openConnection();
-
-
-            mUrlConnection.setDoOutput(true);
+            URL url = new URL(this.url);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setDoOutput(true);
             //设置该连接允许写入
-            mUrlConnection.setDoInput(true);
+            urlConnection.setDoInput(true);
             //设置不能适用缓存
-            mUrlConnection.setUseCaches(false);
+            urlConnection.setUseCaches(false);
             //设置连接超时时间
-            mUrlConnection.setConnectTimeout(5 * 1000);   //设置连接超时时间
+            urlConnection.setConnectTimeout(5 * 1000);   //设置连接超时时间
             //设置读取超时时间
-            mUrlConnection.setReadTimeout(5 * 1000);   //读取超时
+            urlConnection.setReadTimeout(5 * 1000);   //读取超时
             //设置连接方法post
-            mUrlConnection.setRequestMethod("POST");
-            mUrlConnection.setInstanceFollowRedirects(true);
+            urlConnection.setRequestMethod("POST");
+            urlConnection.setInstanceFollowRedirects(true);
             //设置维持长连接
-            mUrlConnection.setRequestProperty("connection", "Keep-Alive");
+            urlConnection.setRequestProperty("connection", "Keep-Alive");
             //设置文件字符集
             //    mUrlConnection.setRequestProperty("Charset", "UTF-8");
-            mUrlConnection.setRequestProperty("Accept-Charset", "UTF-8");
+            urlConnection.setRequestProperty("Accept-Charset", "UTF-8");
             //设置文件类型
-            mUrlConnection.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
+            urlConnection.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
 
-            DataOutputStream dos = new DataOutputStream(mUrlConnection.getOutputStream());
+            DataOutputStream dos = new DataOutputStream(urlConnection.getOutputStream());
             StringBuilder builder = new StringBuilder();
+            Map<String, String> mBody = OnHttpUtil.javaBeanToMap(body);
             if (mBody != null && mBody.size() > 0) {
                 for (Map.Entry<String, String> entry : mBody.entrySet()) {
                     builder.append(PREFIX).append(BOUNDARY).append(LINE_END);
@@ -63,22 +64,22 @@ public class UpdataService extends BaseHttpService {
             }
 
             builder.append(PREFIX).append(BOUNDARY).append(LINE_END);
-            builder.append("Content-Disposition:form-data; name=\"" + "file" + "\"; filename=\"" + mFile.getAbsolutePath() + "\"" + LINE_END);
+            builder.append("Content-Disposition:form-data; name=\"" + "file" + "\"; filename=\"" + file.getAbsolutePath() + "\"" + LINE_END);
             // 这里配置的Content-type很重要的 ，用于服务器端辨别文件的类型的
             builder.append("Content-Type: application/octet-stream").append(LINE_END);
             builder.append("Content-Transfer-Encoding: binary");
             builder.append(LINE_END).append(LINE_END);
             dos.write(builder.toString().getBytes());
             /**上传文件*/
-            InputStream is = new FileInputStream(mFile);
-            //  onUploadProcessListener.initUpload((int)file.length());
+            InputStream is = new FileInputStream(file);
+            upServiceListener.setFileLength(file.length());
             byte[] bytes = new byte[1024];
             int len = 0;
             int curLen = 0;
             while ((len = is.read(bytes)) != -1) {
                 curLen += len;
                 dos.write(bytes, 0, len);
-                //     onUploadProcessListener.onUploadProcess(curLen);
+                upServiceListener.onProgress(curLen);
             }
             is.close();
 
@@ -87,18 +88,14 @@ public class UpdataService extends BaseHttpService {
             dos.write(end_data);
             dos.flush();
 
-            int statusCode = mUrlConnection.getResponseCode();
+            int statusCode = urlConnection.getResponseCode();
             if (statusCode == 200) {
-                if (mHeaderListener != null) {
-                    mHeaderListener.onHeader(mUrlConnection.getHeaderFields());
-                }
-                mListener.onSuccess(mUrlConnection.getInputStream());
+                upServiceListener.onSuccess(urlConnection.getInputStream());
             } else {
-                mListener.error(statusCode);
+                upServiceListener.error(statusCode);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }

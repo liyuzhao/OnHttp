@@ -1,4 +1,4 @@
-package com.aliletter.onhttp.base;
+package com.aliletter.onhttp.core;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Future;

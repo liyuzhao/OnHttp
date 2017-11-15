@@ -1,4 +1,4 @@
-package com.aliletter.onhttp.base;
+package com.aliletter.onhttp.core;
 
 import java.io.InputStream;
 
@@ -10,5 +10,6 @@ import java.io.InputStream;
 
 public interface IServiceListener {
     void onSuccess(InputStream inputStream);
+
     void error(int code);
 }

@@ -1,5 +1,7 @@
 package com.aliletter.onhttp.util;
 
+import android.graphics.BitmapFactory;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -7,9 +9,11 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +26,11 @@ import java.util.Map;
  */
 
 public class OnHttpUtil {
+    protected final static String STRING_NAME = "java.lang.String";
+    protected final static String BITMAP_NAME = "android.graphics.Bitmap";
+    protected final static String FILE_NAME = "java.io.File";
+    protected final static String JSONOBJECT_NAME = "org.json.JSONObject";
+
     public static Object fromJsonString(String content, Class<?> clazz) {
         Object obj = null;
         try {
@@ -29,7 +38,8 @@ public class OnHttpUtil {
             JSONObject json = new JSONObject(content);
             Field[] fields = obj.getClass().getDeclaredFields();
             for (Field field : fields) {
-                if (field.getName().contains("serialVersionUID")|field.getName().contains("$change")) continue;
+                if (field.getName().contains("serialVersionUID") | field.getName().contains("$change"))
+                    continue;
                 field.setAccessible(true);
                 if (json.isNull(field.getName())) continue;
                 setField(obj, field, json);
@@ -51,7 +61,8 @@ public class OnHttpUtil {
             obj = clazz.newInstance();
             Field[] fields = obj.getClass().getDeclaredFields();
             for (Field field : fields) {
-                if (field.getName().contains("serialVersionUID")|field.getName().contains("$change")) continue;
+                if (field.getName().contains("serialVersionUID") | field.getName().contains("$change"))
+                    continue;
                 field.setAccessible(true);
                 if (json.isNull(field.getName())) continue;
                 setField(obj, field, json);
@@ -141,6 +152,7 @@ public class OnHttpUtil {
     }
 
     public static Map<String, String> javaBeanToMap(Object o) {
+        if (o == null) return new HashMap<>();
         if (o.getClass().getName().endsWith(".Map") | o.getClass().getName().endsWith("HashMap"))
             return (Map<String, String>) o;
         Map<String, String> map = new HashMap<>();
@@ -149,9 +161,10 @@ public class OnHttpUtil {
         try {
             for (Field field : fields) {
                 field.setAccessible(true);
-                if (null != field.get(o)){
-                    if (!field.getName().contains("serialVersionUID")|field.getName().contains("$change"))
-                        map.put(field.getName(), field.get(o).toString());}
+                if (null != field.get(o)) {
+                    if (!field.getName().contains("serialVersionUID") | field.getName().contains("$change"))
+                        map.put(field.getName(), field.get(o).toString());
+                }
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -159,7 +172,95 @@ public class OnHttpUtil {
         return map;
     }
 
-    public static String url2FileName(String url){
-        return url.replace("/", "_").replace(":", "-").replace(".","-");
+    public static String url2FileName(String url) {
+        return url.replace("/", "_").replace(":", "-").replace(".", "-");
+    }
+
+
+    public static byte[] body2Byte(Object object) {
+        if (object == null) new String().getBytes();
+        StringBuilder builder = null;
+        Map<String, String> body;
+        if (object instanceof Map)
+            body = (Map<String, String>) object;
+        else
+            body = javaBeanToMap(object);
+        for (String key : body.keySet()) {
+            if (builder == null) builder = new StringBuilder();
+            else builder.append("&");
+            try {
+                builder.append(String.format("%s=%s", key, URLEncoder.encode(body.get(key), "utf-8")));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+        return builder.toString().getBytes();
+    }
+
+    public static String bodyTUrl(Object object) {
+        if (object == null) return new String();
+        StringBuilder builder = null;
+        Map<String, String> body;
+        if (object instanceof Map)
+            body = (Map<String, String>) object;
+        else
+            body = javaBeanToMap(object);
+        for (String key : body.keySet()) {
+            if (builder == null) builder = new StringBuilder();
+            else builder.append("&");
+
+            try {
+                builder.append(String.format("%s=%s", key, URLEncoder.encode(body.get(key), "utf-8")));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return builder.toString();
+    }
+
+
+    public static Object responseFromInputStream(InputStream inputStream, Class<?> clazz) {
+        Object o = null;
+        if (clazz.getName().equalsIgnoreCase(STRING_NAME)) {
+            o = getString(inputStream);
+        } else if (clazz.getName().equalsIgnoreCase(BITMAP_NAME)) {
+            o = getBitmap(inputStream);
+        } else if (clazz.getName().equalsIgnoreCase(FILE_NAME)) {
+
+        } else if (clazz.getName().equalsIgnoreCase(JSONOBJECT_NAME)) {
+            o = getJSONObject((String) getString(inputStream));
+        } else {
+            o = getJson(inputStream, clazz);
+        }
+        return o;
+    }
+
+
+    private static Object getBitmap(InputStream inputStream) {
+        return BitmapFactory.decodeStream(inputStream);
+    }
+
+    private static Object getString(InputStream inputStream) {
+        return OnHttpUtil.streamToString(inputStream);
+    }
+
+    private static Object getJson(InputStream inputStream, Class<?> clazz) {
+        try {
+            return OnHttpUtil.fromJsonString(OnHttpUtil.streamToString(inputStream), clazz);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static Object getJSONObject(String s) {
+        JSONObject object = null;
+        try {
+            object = new JSONObject(s);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return object;
     }
 }
