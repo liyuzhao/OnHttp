@@ -1,7 +1,5 @@
 package com.aliletter.onhttp.core;
 
-import com.aliletter.onhttp.httploader.IHttpService;
-
 import java.net.HttpURLConnection;
 import java.util.concurrent.FutureTask;
 
@@ -11,7 +9,7 @@ import java.util.concurrent.FutureTask;
  * Data: 2017/11/15.
  */
 
-public abstract class BaseService implements IBaseService {
+public abstract class BaseLoader implements IBaseLoader {
     protected HttpURLConnection urlConnection;
     protected String url = null;
     protected Object header = null;

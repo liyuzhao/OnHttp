@@ -22,8 +22,7 @@ class ImageLoaderEngine {
 	private Executor taskExecutorForCachedImages;
 	private Executor taskDistributor;
 
-	private final Map<Integer, String> cacheKeysForImageAwares = Collections
-			.synchronizedMap(new HashMap<Integer, String>());
+	private final Map<Integer, String> cacheKeysForImageAwares = Collections.synchronizedMap(new HashMap<Integer, String>());
 	private final Map<String, ReentrantLock> uriLocks = new WeakHashMap<String, ReentrantLock>();
 
 	private final AtomicBoolean paused = new AtomicBoolean(false);

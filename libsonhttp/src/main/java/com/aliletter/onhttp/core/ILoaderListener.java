@@ -8,7 +8,7 @@ import java.io.InputStream;
  * Emile:4884280@qq.com
  */
 
-public interface IServiceListener {
+public interface ILoaderListener {
     void onSuccess(InputStream inputStream);
 
     void error(int code);

@@ -77,6 +77,6 @@ public final class L {
 			String logBody = Log.getStackTraceString(ex);
 			log = String.format(LOG_FORMAT, logMessage, logBody);
 		}
-		Log.println(priority, ImageLoader.TAG, log);
+		Log.println(priority, "OnHttp", log);
 	}
 }

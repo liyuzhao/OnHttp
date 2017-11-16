@@ -5,6 +5,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 
 import com.aliletter.onhttp.imageloader.core.ImageLoader;
+import com.aliletter.onhttp.imageloader.core.ImageLoaderConfig;
 
 
 public class PauseOnScrollListener implements OnScrollListener {
@@ -22,7 +23,7 @@ public class PauseOnScrollListener implements OnScrollListener {
 
 	
 	public PauseOnScrollListener(ImageLoader imageLoader, boolean pauseOnScroll, boolean pauseOnFling,
-			OnScrollListener customListener) {
+								 OnScrollListener customListener) {
 		this.imageLoader = imageLoader;
 		this.pauseOnScroll = pauseOnScroll;
 		this.pauseOnFling = pauseOnFling;
@@ -33,16 +34,16 @@ public class PauseOnScrollListener implements OnScrollListener {
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		switch (scrollState) {
 			case OnScrollListener.SCROLL_STATE_IDLE:
-				imageLoader.resume();
+				ImageLoaderConfig.getInstance().resume();
 				break;
 			case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
 				if (pauseOnScroll) {
-					imageLoader.pause();
+					ImageLoaderConfig.getInstance().pause();
 				}
 				break;
 			case OnScrollListener.SCROLL_STATE_FLING:
 				if (pauseOnFling) {
-					imageLoader.pause();
+					ImageLoaderConfig.getInstance().pause();
 				}
 				break;
 		}

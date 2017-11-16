@@ -1,6 +1,6 @@
 package com.aliletter.onhttp.downloader;
 
-import com.aliletter.onhttp.core.BaseServiceListener;
+import com.aliletter.onhttp.core.BaseLoaderListener;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,12 +12,12 @@ import java.io.InputStream;
  * Data: 2017/11/15.
  */
 
-public class DownServiceListener extends BaseServiceListener {
+public class DownLoaderListener extends BaseLoaderListener {
     private IDownListener mListener;
     private File mFile;
     private float mFileLength;
 
-    public DownServiceListener(IDownListener mListener, File mFile) {
+    public DownLoaderListener(IDownListener mListener, File mFile) {
         this.mListener = mListener;
         this.mFile = mFile;
     }

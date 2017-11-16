@@ -2,8 +2,7 @@ package com.aliletter.onhttp.downloader;
 
 import android.util.Log;
 
-import com.aliletter.onhttp.core.BaseService;
-import com.aliletter.onhttp.httploader.IHttpService;
+import com.aliletter.onhttp.core.BaseLoader;
 
 import java.io.File;
 
@@ -13,38 +12,38 @@ import java.io.File;
  * Data: 2017/11/15.
  */
 
-public abstract class BaseDownService extends BaseService implements IDownService {
+public abstract class BaseDownLoader extends BaseLoader implements IDownLoader {
     protected File file = null;
     protected IDownListener listener;
-    protected DownServiceListener downServiceListener;
+    protected DownLoaderListener downServiceListener;
 
 
     @Override
-    public IDownService url(String url) {
+    public IDownLoader url(String url) {
         this.url = url;
         return this;
     }
 
     @Override
-    public IDownService header(Object header) {
+    public IDownLoader header(Object header) {
         this.header = header;
         return this;
     }
 
     @Override
-    public IDownService body(Object body) {
+    public IDownLoader body(Object body) {
         this.body = body;
         return this;
     }
 
     @Override
-    public IDownService listener(IDownListener listener) {
+    public IDownLoader listener(IDownListener listener) {
         this.listener = listener;
         return this;
     }
 
     @Override
-    public IDownService file(File file) {
+    public IDownLoader file(File file) {
         this.file = file;
         return this;
     }
@@ -63,7 +62,7 @@ public abstract class BaseDownService extends BaseService implements IDownServic
             Log.w("OnHttp", "file is null");
             return false;
         }
-        downServiceListener = new DownServiceListener(listener, file);
+        downServiceListener = new DownLoaderListener(listener, file);
         return true;
     }
 

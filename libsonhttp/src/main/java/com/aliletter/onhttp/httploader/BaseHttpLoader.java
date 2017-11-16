@@ -3,8 +3,8 @@ package com.aliletter.onhttp.httploader;
 import android.util.Log;
 
 import com.aliletter.onhttp.core.IHeaderListener;
-import com.aliletter.onhttp.core.BaseService;
-import com.aliletter.onhttp.core.IServiceListener;
+import com.aliletter.onhttp.core.BaseLoader;
+import com.aliletter.onhttp.core.ILoaderListener;
 import com.aliletter.onhttp.core.Method;
 
 /**
@@ -13,55 +13,55 @@ import com.aliletter.onhttp.core.Method;
  * Data: 2017/11/15.
  */
 
-public abstract class BaseHttpService extends BaseService implements IHttpService {
+public abstract class BaseHttpLoader extends BaseLoader implements IHttpLoader {
     protected Method method = null;
     protected IHttpListener listener = null;
     protected IHeaderListener headerListener = null;
 
     protected Class<?> clazz = null;
-    protected IServiceListener serviceListener;
+    protected ILoaderListener serviceListener;
 
 
 
     @Override
-    public IHttpService url(String url) {
+    public IHttpLoader url(String url) {
         this.url = url;
         return this;
     }
 
     @Override
-    public IHttpService header(Object header) {
+    public IHttpLoader header(Object header) {
         this.header = header;
         return this;
     }
 
     @Override
-    public IHttpService body(Object body) {
+    public IHttpLoader body(Object body) {
         this.body = body;
         return this;
     }
 
 
     @Override
-    public IHttpService method(Method method) {
+    public IHttpLoader method(Method method) {
         this.method = method;
         return this;
     }
 
     @Override
-    public IHttpService clazz(Class<?> clazz) {
+    public IHttpLoader clazz(Class<?> clazz) {
         this.clazz = clazz;
         return this;
     }
 
     @Override
-    public <T> IHttpService listener(IHttpListener<T> listener) {
+    public <T> IHttpLoader listener(IHttpListener<T> listener) {
         this.listener = listener;
         return this;
     }
 
     @Override
-    public IHttpService headerListener(IHeaderListener headerListener) {
+    public IHttpLoader headerListener(IHeaderListener headerListener) {
         this.headerListener = headerListener;
         return this;
     }
@@ -80,7 +80,7 @@ public abstract class BaseHttpService extends BaseService implements IHttpServic
             Log.w("OnHttp", "listener is null");
             return false;
         }
-        serviceListener = new HttpServiceListener<>(listener, clazz);
+        serviceListener = new HttpLoaderListener<>(listener, clazz);
         return true;
     }
 }

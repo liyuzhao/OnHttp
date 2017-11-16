@@ -1,6 +1,6 @@
 package com.aliletter.onhttp.httploader;
 
-import com.aliletter.onhttp.core.BaseServiceListener;
+import com.aliletter.onhttp.core.BaseLoaderListener;
 import com.aliletter.onhttp.util.OnHttpUtil;
 
 import java.io.IOException;
@@ -12,11 +12,11 @@ import java.io.InputStream;
  * Data: 2017/11/15.
  */
 
-public class HttpServiceListener<T> extends BaseServiceListener {
+public class HttpLoaderListener<T> extends BaseLoaderListener {
     private IHttpListener<T> listener;
     private Class<?> clazz;
 
-    public HttpServiceListener(IHttpListener<T> listener, Class<?> clazz) {
+    public HttpLoaderListener(IHttpListener<T> listener, Class<?> clazz) {
         this.listener = listener;
         this.clazz = clazz;
     }

@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         imageView = (ImageView) findViewById(R.id.iv_view);
-
+        OnHttp.initDefault(getApplicationContext());
     }
 
 
@@ -60,22 +60,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void loadimg() {
-        OnHttp.httpBuilder()
+        OnHttp.imageLoader()
+                .view(imageView)
                 .url(Constaint.PIC)
-                .method(Method.GET)
-                .clazz(Bitmap.class)
-                .listener(new IHttpListener<Bitmap>() {
-                    @Override
-                    public void onSuccess(Bitmap bitmap) {
-                        imageView.setImageBitmap(bitmap);
-                    }
-
-                    @Override
-                    public void onError(int code) {
-
-                    }
-                }).build();
-        OnHttp.downBuilder()
+                .build();
+//        OnHttp.httpBuilder()
+//                .url(Constaint.PIC)
+//                .method(Method.GET)
+//                .clazz(Bitmap.class)
+//                .listener(new IHttpListener<Bitmap>() {
+//                    @Override
+//                    public void onSuccess(Bitmap bitmap) {
+//                        imageView.setImageBitmap(bitmap);
+//                    }
+//
+//                    @Override
+//                    public void onError(int code) {
+//
+//                    }
+//                }).build();
+        OnHttp.downLoader()
                 .file(new File("/sdcard/123213123.jpg"))
                 .url(Constaint.PIC)
                 .listener(new IDownListener() {

@@ -2,8 +2,7 @@ package com.aliletter.onhttp.uploader;
 
 import android.util.Log;
 
-import com.aliletter.onhttp.core.BaseService;
-import com.aliletter.onhttp.core.IBaseService;
+import com.aliletter.onhttp.core.BaseLoader;
 
 import java.io.File;
 
@@ -13,45 +12,45 @@ import java.io.File;
  * Data: 2017/11/15.
  */
 
-public abstract class BaseUpservice extends BaseService implements IUpService {
+public abstract class BaseUpLoader extends BaseLoader implements IUpLoader {
     protected IUpListener listener;
     protected File file;
     protected Class<?> clazz;
-    protected UpServiceListener upServiceListener;
+    protected UpLoaderListener upServiceListener;
 
 
     @Override
-    public IUpService url(String url) {
+    public IUpLoader url(String url) {
         this.url = url;
         return this;
     }
 
     @Override
-    public IUpService header(Object header) {
+    public IUpLoader header(Object header) {
         this.header = header;
         return this;
     }
 
     @Override
-    public IUpService body(Object body) {
+    public IUpLoader body(Object body) {
         this.body = body;
         return this;
     }
 
     @Override
-    public IUpService file(File file) {
+    public IUpLoader file(File file) {
         this.file = file;
         return this;
     }
 
     @Override
-    public IUpService clazz(Class<?> clazz) {
+    public IUpLoader clazz(Class<?> clazz) {
         this.clazz = clazz;
         return this;
     }
 
     @Override
-    public IUpService listener(IUpListener listener) {
+    public IUpLoader listener(IUpListener listener) {
         this.listener = listener;
         return this;
     }
@@ -71,7 +70,7 @@ public abstract class BaseUpservice extends BaseService implements IUpService {
             Log.w("OnHttp", "file is not exists");
             return false;
         }
-        upServiceListener = new UpServiceListener(listener, clazz);
+        upServiceListener = new UpLoaderListener(listener, clazz);
         return true;
     }
 

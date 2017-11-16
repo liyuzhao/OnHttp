@@ -2,7 +2,6 @@ package com.aliletter.onhttp.downloader;
 
 import com.aliletter.onhttp.util.OnHttpUtil;
 
-import java.io.File;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
@@ -13,7 +12,7 @@ import java.util.Map;
  * Data: 2017/11/15.
  */
 
-public class DownService extends BaseDownService implements IDownService {
+public class DownLoader extends BaseDownLoader implements IDownLoader {
     @Override
     protected void RequstNetWork() {
         try {

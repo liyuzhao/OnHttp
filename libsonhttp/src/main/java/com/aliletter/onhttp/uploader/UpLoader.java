@@ -16,7 +16,7 @@ import java.util.UUID;
  * Data: 2017/11/15.
  */
 
-public class UpService extends BaseUpservice implements IUpService {
+public class UpLoader extends BaseUpLoader implements IUpLoader {
     private static final String BOUNDARY = UUID.randomUUID().toString();
     private static final String PREFIX = "--";
     private static final String LINE_END = "\r\n";

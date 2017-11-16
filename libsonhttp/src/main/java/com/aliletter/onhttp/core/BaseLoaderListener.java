@@ -9,6 +9,6 @@ import android.os.Looper;
  * Data: 2017/11/15.
  */
 
-public abstract class BaseServiceListener implements IServiceListener {
+public abstract class BaseLoaderListener implements ILoaderListener {
     protected Handler hander = new Handler(Looper.getMainLooper());
 }

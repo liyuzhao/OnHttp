@@ -1,7 +1,6 @@
 package com.aliletter.onhttp.uploader;
 
-import com.aliletter.onhttp.core.BaseServiceListener;
-import com.aliletter.onhttp.core.IServiceListener;
+import com.aliletter.onhttp.core.BaseLoaderListener;
 import com.aliletter.onhttp.util.OnHttpUtil;
 
 import java.io.IOException;
@@ -13,12 +12,12 @@ import java.io.InputStream;
  * Data: 2017/11/15.
  */
 
-public class UpServiceListener<T> extends BaseServiceListener {
+public class UpLoaderListener<T> extends BaseLoaderListener {
     private IUpListener listener;
     private Class<?> clazz;
     private float mFileLength;
 
-    public UpServiceListener(IUpListener<T> listener, Class<?> clazz) {
+    public UpLoaderListener(IUpListener<T> listener, Class<?> clazz) {
         this.listener = listener;
         this.clazz = clazz;
     }

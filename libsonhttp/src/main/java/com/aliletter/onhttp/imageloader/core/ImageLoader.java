@@ -8,16 +8,22 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.aliletter.onhttp.imageloader.BaseImageLoader;
+import com.aliletter.onhttp.imageloader.IImageLoader;
 import com.aliletter.onhttp.imageloader.cache.disc.DiskCache;
 import com.aliletter.onhttp.imageloader.cache.memory.MemoryCache;
-import com.aliletter.onhttp.imageloader.core.assist.FailReason;
-import com.aliletter.onhttp.imageloader.core.assist.FlushedInputStream;
+import com.aliletter.onhttp.imageloader.core.DisplayImageOptions;
+import com.aliletter.onhttp.imageloader.core.ImageLoaderConfig;
+import com.aliletter.onhttp.imageloader.core.ImageLoadingInfo;
+import com.aliletter.onhttp.imageloader.core.LoadAndDisplayImageTask;
+import com.aliletter.onhttp.imageloader.core.ProcessAndDisplayImageTask;
 import com.aliletter.onhttp.imageloader.core.assist.ImageSize;
 import com.aliletter.onhttp.imageloader.core.assist.LoadedFrom;
 import com.aliletter.onhttp.imageloader.core.assist.ViewScaleType;
 import com.aliletter.onhttp.imageloader.core.imageaware.ImageAware;
 import com.aliletter.onhttp.imageloader.core.imageaware.ImageViewAware;
 import com.aliletter.onhttp.imageloader.core.imageaware.NonViewAware;
+import com.aliletter.onhttp.imageloader.core.imageaware.ViewAware;
 import com.aliletter.onhttp.imageloader.core.listener.ImageLoadingListener;
 import com.aliletter.onhttp.imageloader.core.listener.ImageLoadingProgressListener;
 import com.aliletter.onhttp.imageloader.core.listener.SimpleImageLoadingListener;
@@ -25,105 +31,33 @@ import com.aliletter.onhttp.imageloader.utils.ImageSizeUtils;
 import com.aliletter.onhttp.imageloader.utils.L;
 import com.aliletter.onhttp.imageloader.utils.MemoryCacheUtils;
 
+import static com.aliletter.onhttp.imageloader.core.ImageLoaderConfig.ERROR_NOT_INIT;
+import static com.aliletter.onhttp.imageloader.core.ImageLoaderConfig.ERROR_WRONG_ARGUMENTS;
+import static com.aliletter.onhttp.imageloader.core.ImageLoaderConfig.LOG_DESTROY;
 
-public class ImageLoader {
-
-    public static final String TAG = ImageLoader.class.getSimpleName();
-
-    static final String LOG_INIT_CONFIG = "Initialize ImageLoader with configuration";
-    static final String LOG_DESTROY = "Destroy ImageLoader";
-    static final String LOG_LOAD_IMAGE_FROM_MEMORY_CACHE = "Load image from memory cache [%s]";
-
-    private static final String WARNING_RE_INIT_CONFIG = "Try to initialize ImageLoader which had already been initialized before. " + "To re-init ImageLoader with new configuration call ImageLoader.destroy() at first.";
-    private static final String ERROR_WRONG_ARGUMENTS = "Wrong arguments were passed to displayImage() method (ImageView reference must not be null)";
-    private static final String ERROR_NOT_INIT = "ImageLoader must be init with configuration before using";
-    private static final String ERROR_INIT_CONFIG_WITH_NULL = "ImageLoader configuration can not be initialized with null";
-
-    private ImageLoaderConfiguration configuration;
-    private ImageLoaderEngine engine;
-
-    private ImageLoadingListener defaultListener = new SimpleImageLoadingListener();
-
-    private volatile static ImageLoader instance;
-
-    
-    public static ImageLoader getInstance() {
-        if (instance == null) {
-            synchronized (ImageLoader.class) {
-                if (instance == null) {
-                    instance = new ImageLoader();
-                }
-            }
-        }
-        return instance;
-    }
-
-    protected ImageLoader() {
-    }
-
-    
-    public synchronized void init(ImageLoaderConfiguration configuration) {
-        if (configuration == null) {
-            throw new IllegalArgumentException(ERROR_INIT_CONFIG_WITH_NULL);
-        }
-        if (this.configuration == null) {
-            L.d(LOG_INIT_CONFIG);
-            engine = new ImageLoaderEngine(configuration);
-            this.configuration = configuration;
-        } else {
-            L.w(WARNING_RE_INIT_CONFIG);
-        }
-    }
-
-    
-    public boolean isInited() {
-        return configuration != null;
-    }
+import static com.aliletter.onhttp.imageloader.core.ImageLoaderConfig.LOG_LOAD_IMAGE_FROM_MEMORY_CACHE;
 
 
-    public void displayImage(String uri, ImageAware imageAware) {
-        displayImage(uri, imageAware, null, null, null);
-    }
+public class ImageLoader extends BaseImageLoader implements IImageLoader {
 
-
-    public void displayImage(String uri, ImageAware imageAware, ImageLoadingListener listener) {
-        displayImage(uri, imageAware, null, listener, null);
-    }
-
-
-    public void displayImage(String uri, ImageAware imageAware, DisplayImageOptions options) {
-        displayImage(uri, imageAware, options, null, null);
-    }
-
-
-    public void displayImage(String uri, ImageAware imageAware, DisplayImageOptions options,
-                             ImageLoadingListener listener) {
-        displayImage(uri, imageAware, options, listener, null);
-    }
-
-
-    public void displayImage(String uri, ImageAware imageAware, DisplayImageOptions options,
-                             ImageLoadingListener listener, ImageLoadingProgressListener progressListener) {
-        displayImage(uri, imageAware, options, null, listener, progressListener);
-    }
-
+    @Override
     public void displayImage(String uri, ImageAware imageAware, DisplayImageOptions options, ImageSize targetSize, ImageLoadingListener listener, ImageLoadingProgressListener progressListener) {
-        checkConfiguration();
+        ImageLoaderConfig.getInstance().checkConfiguration();
         if (imageAware == null) {
             throw new IllegalArgumentException(ERROR_WRONG_ARGUMENTS);
         }
         if (listener == null) {
-            listener = defaultListener;
+            listener = ImageLoaderConfig.getInstance().getDefaultListener();
         }
         if (options == null) {
-            options = configuration.defaultDisplayImageOptions;
+            options = ImageLoaderConfig.getInstance().getConfiguration().defaultDisplayImageOptions;
         }
 
         if (TextUtils.isEmpty(uri)) {
-            engine.cancelDisplayTaskFor(imageAware);
+            ImageLoaderConfig.getInstance().getEngine().cancelDisplayTaskFor(imageAware);
             listener.onLoadingStarted(uri, imageAware.getWrappedView());
             if (options.shouldShowImageForEmptyUri()) {
-                imageAware.setImageDrawable(options.getImageForEmptyUri(configuration.resources));
+                imageAware.setImageDrawable(options.getImageForEmptyUri(ImageLoaderConfig.getInstance().getConfiguration().resources));
             } else {
                 imageAware.setImageDrawable(null);
             }
@@ -132,26 +66,26 @@ public class ImageLoader {
         }
 
         if (targetSize == null) {
-            targetSize = ImageSizeUtils.defineTargetSizeForView(imageAware, configuration.getMaxImageSize());
+            targetSize = ImageSizeUtils.defineTargetSizeForView(imageAware, ImageLoaderConfig.getInstance().getConfiguration().getMaxImageSize());
         }
         String memoryCacheKey = MemoryCacheUtils.generateKey(uri, targetSize);
-        engine.prepareDisplayTaskFor(imageAware, memoryCacheKey);
+        ImageLoaderConfig.getInstance().getEngine().prepareDisplayTaskFor(imageAware, memoryCacheKey);
 
         listener.onLoadingStarted(uri, imageAware.getWrappedView());
 
-        Bitmap bmp = configuration.memoryCache.get(memoryCacheKey);
+        Bitmap bmp = ImageLoaderConfig.getInstance().getConfiguration().memoryCache.get(memoryCacheKey);
         if (bmp != null && !bmp.isRecycled()) {
             L.d(LOG_LOAD_IMAGE_FROM_MEMORY_CACHE, memoryCacheKey);
 
             if (options.shouldPostProcess()) {
                 ImageLoadingInfo imageLoadingInfo = new ImageLoadingInfo(uri, imageAware, targetSize, memoryCacheKey,
-                        options, listener, progressListener, engine.getLockForUri(uri));
-                ProcessAndDisplayImageTask displayTask = new ProcessAndDisplayImageTask(engine, bmp, imageLoadingInfo,
-                        defineHandler(options));
+                        options, listener, progressListener, ImageLoaderConfig.getInstance().getEngine().getLockForUri(uri));
+                ProcessAndDisplayImageTask displayTask = new ProcessAndDisplayImageTask(ImageLoaderConfig.getInstance().getEngine(), bmp, imageLoadingInfo,
+                        ImageLoaderConfig.getInstance().defineHandler(options));
                 if (options.isSyncLoading()) {
                     displayTask.run();
                 } else {
-                    engine.submit(displayTask);
+                    ImageLoaderConfig.getInstance().getEngine().submit(displayTask);
                 }
             } else {
                 options.getDisplayer().display(bmp, imageAware, LoadedFrom.MEMORY_CACHE);
@@ -159,238 +93,23 @@ public class ImageLoader {
             }
         } else {
             if (options.shouldShowImageOnLoading()) {
-                imageAware.setImageDrawable(options.getImageOnLoading(configuration.resources));
+                imageAware.setImageDrawable(options.getImageOnLoading(ImageLoaderConfig.getInstance().getConfiguration().resources));
             } else if (options.isResetViewBeforeLoading()) {
                 imageAware.setImageDrawable(null);
             }
 
             ImageLoadingInfo imageLoadingInfo = new ImageLoadingInfo(uri, imageAware, targetSize, memoryCacheKey,
-                    options, listener, progressListener, engine.getLockForUri(uri));
-            LoadAndDisplayImageTask displayTask = new LoadAndDisplayImageTask(engine, imageLoadingInfo,
-                    defineHandler(options));
+                    options, listener, progressListener, ImageLoaderConfig.getInstance().getEngine().getLockForUri(uri));
+            LoadAndDisplayImageTask displayTask = new LoadAndDisplayImageTask(ImageLoaderConfig.getInstance().getEngine(), imageLoadingInfo,
+                    ImageLoaderConfig.getInstance().defineHandler(options));
             if (options.isSyncLoading()) {
                 displayTask.run();
             } else {
-                engine.submit(displayTask);
+                ImageLoaderConfig.getInstance().getEngine().submit(displayTask);
             }
         }
     }
 
-    
-    public void displayImage(String uri, ImageView imageView) {
-        displayImage(uri, new ImageViewAware(imageView), null, null, null);
-    }
-
-    
-    public void displayImage(String uri, ImageView imageView, ImageSize targetImageSize) {
-        displayImage(uri, new ImageViewAware(imageView), null, targetImageSize, null, null);
-    }
 
 
-    public void displayImage(String uri, ImageView imageView, DisplayImageOptions options) {
-        displayImage(uri, new ImageViewAware(imageView), options, null, null);
-    }
-
-
-    public void displayImage(String uri, ImageView imageView, ImageLoadingListener listener) {
-        displayImage(uri, new ImageViewAware(imageView), null, listener, null);
-    }
-
-    public void displayImage(String uri, ImageView imageView, DisplayImageOptions options,
-                             ImageLoadingListener listener) {
-        displayImage(uri, imageView, options, listener, null);
-    }
-
-
-    public void displayImage(String uri, ImageView imageView, DisplayImageOptions options,
-                             ImageLoadingListener listener, ImageLoadingProgressListener progressListener) {
-        displayImage(uri, new ImageViewAware(imageView), options, listener, progressListener);
-    }
-
-    
-    public void loadImage(String uri, ImageLoadingListener listener) {
-        loadImage(uri, null, null, listener, null);
-    }
-
-
-    public void loadImage(String uri, ImageSize targetImageSize, ImageLoadingListener listener) {
-        loadImage(uri, targetImageSize, null, listener, null);
-    }
-
-
-    public void loadImage(String uri, DisplayImageOptions options, ImageLoadingListener listener) {
-        loadImage(uri, null, options, listener, null);
-    }
-
-
-    public void loadImage(String uri, ImageSize targetImageSize, DisplayImageOptions options,
-                          ImageLoadingListener listener) {
-        loadImage(uri, targetImageSize, options, listener, null);
-    }
-
-
-    public void loadImage(String uri, ImageSize targetImageSize, DisplayImageOptions options,
-                          ImageLoadingListener listener, ImageLoadingProgressListener progressListener) {
-        checkConfiguration();
-        if (targetImageSize == null) {
-            targetImageSize = configuration.getMaxImageSize();
-        }
-        if (options == null) {
-            options = configuration.defaultDisplayImageOptions;
-        }
-
-        NonViewAware imageAware = new NonViewAware(uri, targetImageSize, ViewScaleType.CROP);
-        displayImage(uri, imageAware, options, listener, progressListener);
-    }
-
-
-    public Bitmap loadImageSync(String uri) {
-        return loadImageSync(uri, null, null);
-    }
-
-    public Bitmap loadImageSync(String uri, DisplayImageOptions options) {
-        return loadImageSync(uri, null, options);
-    }
-
-
-    public Bitmap loadImageSync(String uri, ImageSize targetImageSize) {
-        return loadImageSync(uri, targetImageSize, null);
-    }
-
-
-    public Bitmap loadImageSync(String uri, ImageSize targetImageSize, DisplayImageOptions options) {
-        if (options == null) {
-            options = configuration.defaultDisplayImageOptions;
-        }
-        options = new DisplayImageOptions.Builder().cloneFrom(options).syncLoading(true).build();
-
-        SyncImageLoadingListener listener = new SyncImageLoadingListener();
-        loadImage(uri, targetImageSize, options, listener);
-        return listener.getLoadedBitmap();
-    }
-
-
-    private void checkConfiguration() {
-        if (configuration == null) {
-            throw new IllegalStateException(ERROR_NOT_INIT);
-        }
-    }
-
-    public void setDefaultLoadingListener(ImageLoadingListener listener) {
-        defaultListener = listener == null ? new SimpleImageLoadingListener() : listener;
-    }
-
-    
-    public MemoryCache getMemoryCache() {
-        checkConfiguration();
-        return configuration.memoryCache;
-    }
-
-    
-    public void clearMemoryCache() {
-        checkConfiguration();
-        configuration.memoryCache.clear();
-    }
-
-    
-    @Deprecated
-    public DiskCache getDiscCache() {
-        return getDiskCache();
-    }
-
-    
-    public DiskCache getDiskCache() {
-        checkConfiguration();
-        return configuration.diskCache;
-    }
-
-    
-    @Deprecated
-    public void clearDiscCache() {
-        clearDiskCache();
-    }
-
-    
-    public void clearDiskCache() {
-        checkConfiguration();
-        configuration.diskCache.clear();
-    }
-
-    public String getLoadingUriForView(ImageAware imageAware) {
-        return engine.getLoadingUriForView(imageAware);
-    }
-
-
-    public String getLoadingUriForView(ImageView imageView) {
-        return engine.getLoadingUriForView(new ImageViewAware(imageView));
-    }
-
-
-    public void cancelDisplayTask(ImageAware imageAware) {
-        engine.cancelDisplayTaskFor(imageAware);
-    }
-
-
-    public void cancelDisplayTask(ImageView imageView) {
-        engine.cancelDisplayTaskFor(new ImageViewAware(imageView));
-    }
-
-    
-    public void denyNetworkDownloads(boolean denyNetworkDownloads) {
-        engine.denyNetworkDownloads(denyNetworkDownloads);
-    }
-
-    
-    public void handleSlowNetwork(boolean handleSlowNetwork) {
-        engine.handleSlowNetwork(handleSlowNetwork);
-    }
-
-    
-    public void pause() {
-        engine.pause();
-    }
-
-    
-    public void resume() {
-        engine.resume();
-    }
-
-
-    public void stop() {
-        engine.stop();
-    }
-
-    
-    public void destroy() {
-        if (configuration != null) L.d(LOG_DESTROY);
-        stop();
-        configuration.diskCache.close();
-        engine = null;
-        configuration = null;
-    }
-
-    private static Handler defineHandler(DisplayImageOptions options) {
-        Handler handler = options.getHandler();
-        if (options.isSyncLoading()) {
-            handler = null;
-        } else if (handler == null && Looper.myLooper() == Looper.getMainLooper()) {
-            handler = new Handler();
-        }
-        return handler;
-    }
-
-    
-    private static class SyncImageLoadingListener extends SimpleImageLoadingListener {
-
-        private Bitmap loadedImage;
-
-        @Override
-        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-            this.loadedImage = loadedImage;
-        }
-
-        public Bitmap getLoadedBitmap() {
-            return loadedImage;
-        }
-    }
 }

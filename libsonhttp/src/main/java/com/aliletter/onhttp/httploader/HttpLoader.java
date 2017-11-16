@@ -14,7 +14,7 @@ import java.util.Map;
  * Data: 2017/11/15.
  */
 
-public class HttpService extends BaseHttpService {
+public class HttpLoader extends BaseHttpLoader {
     @Override
     protected void RequstNetWork() {
         try {
