@@ -85,15 +85,15 @@ Imageloader可以设置加载过程中显示的图片，加载失败的图片。
 		}
 	}
   
-### Step 2. Add the dependency
+### Step 2. 添加依赖
 合并以下代码到需要使用的application Module的dependencies尾。[点击查看详情](https://github.com/aliletter/CarouselBanner/blob/master/application_build.gradle.png)
 
 	dependencies {
 	  ...
-          compile 'com.github.aliletter:onhttp:v1.0.5
+          compile 'com.github.aliletter:onhttp:v1.2.7
 	}
   
-### Step 3. Add the permission
+### Step 3. 添加权限
 合并以下代码到应用的AndroidManifest.xml的manifest标签中。  
 [click here for details](https://github.com/aliletter/OnHttp/blob/master/androidmanifest.gradle.png)
 ```Java
