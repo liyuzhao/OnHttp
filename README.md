@@ -87,12 +87,12 @@ Add it in your root build.gradle at the end of repositories.[click here for deta
   
 ### Step 2. Add the dependency
 Add it in your application module build.gradle at the end of dependencies where you want to use.   [click here for details](https://github.com/aliletter/CarouselBanner/blob/master/application_build.gradle.png)
-
+```Java
 	dependencies {
 	  ...
           compile 'com.github.aliletter:onhttp:v1.2.7'
 	}
-  
+```	
 ### Step 3. Add the permission
 Add it in your application AndroidManifest.xml in the manifest label.   [click here for details](https://github.com/aliletter/OnHttp/blob/master/androidmanifest.gradle.png)
 ```Java
