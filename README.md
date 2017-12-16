@@ -90,7 +90,7 @@ Add it in your application module build.gradle at the end of dependencies where 
 
 	dependencies {
 	  ...
-          compile 'com.github.aliletter:onhttp:v1.0.5
+          compile 'com.github.aliletter:onhttp:v1.2.7'
 	}
   
 ### Step 3. Add the permission
