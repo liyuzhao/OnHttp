@@ -3,8 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/OnHttp.iml" filepath="$PROJECT_DIR$/OnHttp.iml" />
+      <module fileurl="file://C:\Users\absurd\Desktop\OnHttp\OnHttp.iml" filepath="C:\Users\absurd\Desktop\OnHttp\OnHttp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\Users\absurd\Desktop\OnHttp\app\app.iml" filepath="C:\Users\absurd\Desktop\OnHttp\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/libsonhttp/libsonhttp.iml" filepath="$PROJECT_DIR$/libsonhttp/libsonhttp.iml" />
+      <module fileurl="file://C:\Users\absurd\Desktop\OnHttp\libsonhttp\libsonhttp.iml" filepath="C:\Users\absurd\Desktop\OnHttp\libsonhttp\libsonhttp.iml" />
     </modules>
   </component>
 </project>

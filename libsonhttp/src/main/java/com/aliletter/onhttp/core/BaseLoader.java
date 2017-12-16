@@ -28,7 +28,7 @@ public abstract class BaseLoader implements IBaseLoader {
     protected abstract void RequstNetWork();
 
     @Override
-    public void build() {
+    public void executor() {
         ThreadPoolManager.getInstance().excute(new FutureTask<Object>(this, null));
     }
 }

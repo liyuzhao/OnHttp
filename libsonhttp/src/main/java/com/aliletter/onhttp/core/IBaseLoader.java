@@ -9,10 +9,9 @@ package com.aliletter.onhttp.core;
 public interface IBaseLoader extends Runnable {
 
 
+    void executor();
 
-    void build();
-
-   boolean checkParameters();
+    boolean checkParameters();
 
 
 }

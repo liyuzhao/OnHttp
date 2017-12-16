@@ -83,7 +83,7 @@ public abstract class BaseImageLoader implements IImageLoader {
     }
 
     @Override
-    public void build() {
+    public void executor() {
         if (!checkParameters()) return;
         if (option == null) {
             option = new DisplayImageOptions.Builder()

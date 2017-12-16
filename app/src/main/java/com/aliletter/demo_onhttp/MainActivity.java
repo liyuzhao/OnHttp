@@ -63,7 +63,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         OnHttp.imageLoader()
                 .view(imageView)
                 .url(Constaint.PIC)
-                .build();
+
+                .executor();
 //        OnHttp.httpBuilder()
 //                .url(Constaint.PIC)
 //                .method(Method.GET)
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onError(int code) {
 
                     }
-                }).build();
+                }).executor();
 
 //        OnHttp.getInstance().url(Constaint.PIC)
 //                .id(R.mipmap.ic_launcher)
