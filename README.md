@@ -1,9 +1,9 @@
 # OnHttp  [![](https://jitpack.io/v/aliletter/onhttp.svg)](https://jitpack.io/#aliletter/onhttp)
-OnHttp is composed of four parts: Imageloader, Uploader, Downloader, and Httploader. The corresponding functions are image loading, file uploading, file downloading, and network request. The data returned by the network request can be automatically converted to Json, JavaBean, File, Bitmap, and so on. Onhttp is easy to use, and all of the network requests are asynchronous.(OnHttp由四部分组成，分别是Imageloader，Uploader，Downloader和Httploader。对应的功能为图片加载，文件上传，文件下载，网络请求。网络请求返回的数据可以通过设置自动转换为Json，JavaBean，File，Bitmap等。Onhttp使用简单，而且所有的网络请求均为异步请求。)
+OnHttp is composed of four parts: Imageloader, Uploader, Downloader, and Httploader. The corresponding functions are image loading, file uploading, file downloading, and network request. The data returned by the network request can be automatically converted to Json, JavaBean, File, Bitmap, and so on. Onhttp is easy to use, and all of the network requests are asynchronous.(OnHttp由四部分组成，分别是Imageloader，Uploader，Downloader和Httploader。[中文文档](https://github.com/aliletter/OnHttp/blob/master/README_CHINESE.md)
 ## Instruction
-Imageloader can set the images that are displayed during the loading process and load the failed pictures. Uploader currently only supports ordinary uploads, and breakpoint uploads are not yet supported. Downloader can set the callback, monitor the download progress, download the completion and so on. Httploader supports the adding of the request head, the request body, the setting of the request, and so on.(Imageloader可以设置加载过程中显示的图片，加载失败的图片。Uploader目前只支持普通上传，断点上传目前尚未支持。Downloader可以设置回调，监听下载进度，下载完成等。Httploader支持添加请求头，请求体，设置请求方式等。)
+Imageloader can set the images that are displayed during the loading process and load the failed pictures. Uploader currently only supports ordinary uploads, and breakpoint uploads are not yet supported. Downloader can set the callback, monitor the download progress, download the completion and so on. Httploader supports the adding of the request head, the request body, the setting of the request, and so on.
 ### Code Sample
-Before use, please initialize the OnHttp. The location of the Imageloader's cache in the local location can be configured by initialing.(在使用之前，请初始化OnHttp。可以通过初始化配置Imageloader的缓存在本地中的位置。)
+Before use, please initialize the OnHttp. The location of the Imageloader's cache in the local location can be configured by initialing.
 ```Java
         OnHttp.imageLoader()
                 .view(ImageView)
