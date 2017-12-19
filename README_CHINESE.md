@@ -2,7 +2,7 @@
 OnHttp由四部分组成，分别是Imageloader，Uploader，Downloader和Httploader。对应的功能为图片加载，文件上传，文件下载，网络请求。网络请求返回的数据可以通过设置自动转换为Json，JavaBean，File，Bitmap等。Onhttp使用简单，而且所有的网络请求均为异步请求。
 ## 使用说明
 Imageloader可以设置加载过程中显示的图片，加载失败的图片。Uploader目前只支持普通上传，断点上传目前尚未支持。Downloader可以设置回调，监听下载进度，下载完成等。Httploader支持添加请求头，请求体，设置请求方式等。
-### Code Sample
+### 代码示例
 在使用之前，请初始化OnHttp。可以通过初始化配置Imageloader的缓存在本地中的位置。(OnHttp.initDefault())
 ```Java
         OnHttp.imageLoader()
