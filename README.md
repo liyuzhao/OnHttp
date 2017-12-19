@@ -3,7 +3,7 @@ OnHttp is composed of four parts: Imageloader, Uploader, Downloader, and Httploa
 ## Instruction
 Imageloader can set the images that are displayed during the loading process and load the failed pictures. Uploader currently only supports ordinary uploads, and breakpoint uploads are not yet supported. Downloader can set the callback, monitor the download progress, download the completion and so on. Httploader supports the adding of the request head, the request body, the setting of the request, and so on.
 ### Code Sample
-Before use, please initialize the OnHttp. The location of the Imageloader's cache in the local location can be configured by initialing.
+Before use, please initialize the OnHttp. The location of the Imageloader's cache in the local location can be configured by initialing.(OnHttp.initDefault())
 ```Java
         OnHttp.imageLoader()
                 .view(ImageView)

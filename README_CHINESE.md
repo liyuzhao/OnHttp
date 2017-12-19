@@ -3,7 +3,7 @@ OnHttp由四部分组成，分别是Imageloader，Uploader，Downloader和Httplo
 ## 使用说明
 Imageloader可以设置加载过程中显示的图片，加载失败的图片。Uploader目前只支持普通上传，断点上传目前尚未支持。Downloader可以设置回调，监听下载进度，下载完成等。Httploader支持添加请求头，请求体，设置请求方式等。
 ### Code Sample
-在使用之前，请初始化OnHttp。可以通过初始化配置Imageloader的缓存在本地中的位置。
+在使用之前，请初始化OnHttp。可以通过初始化配置Imageloader的缓存在本地中的位置。(OnHttp.initDefault())
 ```Java
         OnHttp.imageLoader()
                 .view(ImageView)
