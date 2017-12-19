@@ -100,7 +100,7 @@ Imageloader可以设置加载过程中显示的图片，加载失败的图片。
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 ```
-## Thank you for your browsing
+## 感谢浏览
 如果你有任何疑问，请加入QQ群，我将竭诚为你解答。欢迎Star和Fork本仓库，当然也欢迎你关注我。
 <br>
 ![Image Text](https://github.com/aliletter/CarouselBanner/blob/master/qq_group.png)
