@@ -90,15 +90,15 @@ Imageloader可以设置加载过程中显示的图片，加载失败的图片。
 ```Java
 	dependencies {
 	  ...
-          compile 'com.github.aliletter:onhttp:onhttp:v1.2.8'
+          compile 'com.github.aliletter:onhttp:onhttp:v1.2.9'
 	}
 ```	
 如果你需要配合Rxjava2使用，请按照以下方式合并.
 ```Java
 	dependencies {
 	  ...
-          compile 'com.github.aliletter:onhttp:onhttp:v1.2.8'
-          compile 'com.github.aliletter:onhttp:rxhttp:v1.2.8'
+          compile 'com.github.aliletter:onhttp:onhttp:v1.2.9'
+          compile 'com.github.aliletter:onhttp:rxhttp:v1.2.9'
           compile "io.reactivex.rxjava2:rxjava:2.1.8"
 
 	}

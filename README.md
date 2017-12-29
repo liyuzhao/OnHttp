@@ -90,15 +90,15 @@ Add it in your application module build.gradle at the end of dependencies where 
 ```Java
 	dependencies {
 	  ...
-          compile 'com.github.aliletter:onhttp:onhttp:v1.2.8'
+          compile 'com.github.aliletter:onhttp:onhttp:v1.2.9'
 	}
 ```	
 If you need to work with Rxjava2, please configure it as follows
 ```Java
 	dependencies {
 	  ...
-          compile 'com.github.aliletter:onhttp:onhttp:v1.2.8'
-          compile 'com.github.aliletter:onhttp:rxhttp:v1.2.8'
+          compile 'com.github.aliletter:onhttp:onhttp:v1.2.9'
+          compile 'com.github.aliletter:onhttp:rxhttp:v1.2.9'
           compile "io.reactivex.rxjava2:rxjava:2.1.8"
 
 	}
