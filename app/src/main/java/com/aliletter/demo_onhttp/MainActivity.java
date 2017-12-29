@@ -1,6 +1,5 @@
 package com.aliletter.demo_onhttp;
 
-import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,13 +9,21 @@ import android.widget.ImageView;
 import com.aliletter.onhttp.OnHttp;
 import com.aliletter.onhttp.core.Method;
 import com.aliletter.onhttp.downloader.IDownListener;
-import com.aliletter.onhttp.httploader.IHttpListener;
+import com.aliletter.rxhttp.RxHttp;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     ImageView imageView;
@@ -253,7 +260,55 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        loadimg();
+        // loadimg();
+        Rx();
+    }
+
+    private void Rx() {
+        Observable.create(new RxHttp<JSONObject>() {
+            @Override
+            public String url() {
+                return "http://news.wsj080.com/index.php/api/user/mobileregister?sign=a3cca0946e3589f16ef6679e1bb3f5af&appid=KhIHn7pa3mEn8&passwd=1234567&passwd2=1234567&authcode=1234&nickname=哦你妹&mobile=13557131404";
+            }
+
+            @Override
+            public Map<String, String> body() {
+                return super.body();
+            }
+
+            @Override
+            protected Map<String, String> header() {
+                return super.header();
+            }
+
+            @Override
+            public Class<?> response() {
+                return super.response();
+            }
+
+
+        })
+                .subscribe(new Observer<JSONObject>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(JSONObject object) {
+                        Log.v("TAG", object.toString());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.v("TAG", e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 }
 

@@ -178,7 +178,10 @@ public class OnHttpUtil {
 
 
     public static byte[] body2Byte(Object object) {
-        if (object == null) new String().getBytes();
+        if (object == null) {
+
+            return  new String().getBytes() ;
+        }
         StringBuilder builder = null;
         Map<String, String> body;
         if (object instanceof Map)

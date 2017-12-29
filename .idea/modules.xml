@@ -8,9 +8,10 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://C:\Users\alile\Desktop\OnHttp\app\app.iml" filepath="C:\Users\alile\Desktop\OnHttp\app\app.iml" />
       <module fileurl="file://C:\Users\absurd\Desktop\OnHttp\app\app.iml" filepath="C:\Users\absurd\Desktop\OnHttp\app\app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libsonhttp/libsonhttp.iml" filepath="$PROJECT_DIR$/libsonhttp/libsonhttp.iml" />
       <module fileurl="file://C:\Users\alile\Desktop\OnHttp\libsonhttp\libsonhttp.iml" filepath="C:\Users\alile\Desktop\OnHttp\libsonhttp\libsonhttp.iml" />
       <module fileurl="file://C:\Users\absurd\Desktop\OnHttp\libsonhttp\libsonhttp.iml" filepath="C:\Users\absurd\Desktop\OnHttp\libsonhttp\libsonhttp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/onhttp/libsonhttp.iml" filepath="$PROJECT_DIR$/onhttp/libsonhttp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rxhttp/rxhttp.iml" filepath="$PROJECT_DIR$/rxhttp/rxhttp.iml" />
     </modules>
   </component>
 </project>

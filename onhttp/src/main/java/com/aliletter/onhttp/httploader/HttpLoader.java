@@ -18,7 +18,7 @@ public class HttpLoader extends BaseHttpLoader {
     @Override
     protected void RequstNetWork() {
         try {
-            URL url ;
+            URL url;
             if (method == Method.GET) {
                 url = new URL(this.url + OnHttpUtil.bodyTUrl(body));
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -47,7 +47,7 @@ public class HttpLoader extends BaseHttpLoader {
             for (Map.Entry<String, String> entry : OnHttpUtil.javaBeanToMap(header).entrySet()) {
                 urlConnection.addRequestProperty(entry.getKey(), entry.getValue());
             }
-            if (method == Method.POST) {
+            if (method == Method.POST && body != null) {
                 DataOutputStream dos = new DataOutputStream(urlConnection.getOutputStream());
                 dos.write(OnHttpUtil.body2Byte(body));
                 dos.flush();

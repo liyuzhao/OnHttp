@@ -15,9 +15,6 @@ public abstract class BaseLoader implements IBaseLoader {
     protected Object header = null;
     protected Object body = null;
 
-
-
-
     @Override
     public void run() {
         if (!checkParameters())return;
