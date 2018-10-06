@@ -1,5 +1,5 @@
-# OnHttp  [![](https://jitpack.io/v/blackchopper/onhttp.svg)](https://jitpack.io/#blackchopper/onhttp)
-OnHttp is composed of four parts: Imageloader, Uploader, Downloader, and Httploader. The corresponding functions are image loading, file uploading, file downloading, and network request. The data returned by the network request can be automatically converted to Json, JavaBean, File, Bitmap, and so on. Onhttp is easy to use, and all of the network requests are asynchronous.[中文文档](https://github.com/blackchopper/OnHttp/blob/master/README.md)
+# OnHttp  [![](https://jitpack.io/v/hacknife/onhttp.svg)](https://jitpack.io/#hacknife/onhttp)
+OnHttp is composed of four parts: Imageloader, Uploader, Downloader, and Httploader. The corresponding functions are image loading, file uploading, file downloading, and network request. The data returned by the network request can be automatically converted to Json, JavaBean, File, Bitmap, and so on. Onhttp is easy to use, and all of the network requests are asynchronous.[中文文档](https://github.com/hacknife/OnHttp/blob/master/README.md)
 ## Instruction
 Imageloader can set the images that are displayed during the loading process and load the failed pictures. Uploader currently only supports ordinary uploads, and breakpoint uploads are not yet supported. Downloader can set the callback, monitor the download progress, download the completion and so on. Httploader supports the adding of the request head, the request body, the setting of the request, and so on.
 ### Code Sample
@@ -76,7 +76,7 @@ Before use, please initialize the OnHttp. The location of the Imageloader's cach
 ## How to
 To get a Git project into your build:
 ### Step 1. Add the JitPack repository to your build file
-Add it in your root build.gradle at the end of repositories.[click here for details](https://github.com/blackchopper/CarouselBanner/blob/master/root_build.gradle.png)
+Add it in your root build.gradle at the end of repositories.[click here for details](https://github.com/hacknife/CarouselBanner/blob/master/root_build.gradle.png)
 
 	allprojects {
 		repositories {
@@ -86,25 +86,25 @@ Add it in your root build.gradle at the end of repositories.[click here for deta
 	}
   
 ### Step 2. Add the dependency
-Add it in your application module build.gradle at the end of dependencies where you want to use.   [click here for details](https://github.com/blackchopper/CarouselBanner/blob/master/application_build.gradle.png)
+Add it in your application module build.gradle at the end of dependencies where you want to use.   [click here for details](https://github.com/hacknife/CarouselBanner/blob/master/application_build.gradle.png)
 ```Java
 	dependencies {
 	  ...
-          compile 'com.github.blackchopper:onhttp:onhttp:v1.3.1'
+          compile 'com.github.hacknife:onhttp:onhttp:v1.3.1'
 	}
 ```	
 If you need to work with Rxjava2, please configure it as follows
 ```Java
 	dependencies {
 	  ...
-          compile 'com.github.blackchopper:onhttp:onhttp:v1.3.1'
-          compile 'com.github.blackchopper:onhttp:rxhttp:v1.3.1'
+          compile 'com.github.hacknife:onhttp:onhttp:v1.3.1'
+          compile 'com.github.hacknife:onhttp:rxhttp:v1.3.1'
           compile "io.reactivex.rxjava2:rxjava:2.1.8"
 
 	}
 ```	
 ### Step 3. Add the permission
-Add it in your application AndroidManifest.xml in the manifest label.   [click here for details](https://github.com/blackchopper/OnHttp/blob/master/androimanifest.png)
+Add it in your application AndroidManifest.xml in the manifest label.   [click here for details](https://github.com/hacknife/OnHttp/blob/master/androimanifest.png)
 ```Java
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -113,4 +113,4 @@ Add it in your application AndroidManifest.xml in the manifest label.   [click h
 ## Thank you for your browsing
 If you have any questions, please join the QQ group. I will do my best to answer it for you. Welcome to star and fork this repository, alse follow me.
 <br>
-![Image Text](https://github.com/blackchopper/CarouselBanner/blob/master/qq_group.png)
+![Image Text](https://github.com/hacknife/CarouselBanner/blob/master/qq_group.png)
